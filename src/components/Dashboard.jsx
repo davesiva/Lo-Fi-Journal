@@ -197,7 +197,7 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
             ) : entries.length === 0 ? (
                 <div className="empty-state">
                     <p>No entries yet.</p>
-                    <button className="btn-text" onClick={() => onNavigate('write')}>Start writing</button>
+                    <button className="btn-text" onClick={() => onNavigate(null)}>Start writing</button>
                 </div>
             ) : (
                 <div className="entries-list">
