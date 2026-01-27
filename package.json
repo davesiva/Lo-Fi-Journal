@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "node server.js",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -11,6 +12,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "idb-keyval": "^6.2.2",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
