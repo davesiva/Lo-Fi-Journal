@@ -9,8 +9,16 @@ export default function JournalEditor({ initialDate, onBack }) {
     const [status, setStatus] = useState('loading'); // loading, saved, saving
     const textareaRef = useRef(null);
 
-    // Use prop date or today
-    const targetDate = initialDate || new Date().toLocaleDateString('en-CA');
+    // Use prop date or today (Safely formatted as YYYY-MM-DD local)
+    const getTodayString = () => {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const targetDate = initialDate || getTodayString();
 
     const getKey = () => `journal-${targetDate}`;
 
@@ -18,10 +26,19 @@ export default function JournalEditor({ initialDate, onBack }) {
         loadEntry();
     }, [targetDate]);
 
+    // Auto-summarize debounce effect (run 3s after typing stops)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (content && content.length > 40) {
+                autoSummarize(content);
+            }
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [content]);
+
     const loadEntry = async () => {
         try {
             const saved = await get(getKey());
-            // Handle legacy string vs new object format
             if (saved && typeof saved === 'object') {
                 setContent(saved.content || '');
             } else if (saved) {
@@ -37,18 +54,13 @@ export default function JournalEditor({ initialDate, onBack }) {
     };
 
     const saveContent = async (text, summary = null) => {
-        // We need to fetch existing summary if we are only saving text, 
-        // OR we just overwrite if we don't care. 
-        // Better: Read current state.
         const currentData = await get(getKey()) || {};
         const oldSummary = typeof currentData === 'object' ? currentData.summary : null;
-
-        // Support legacy string read if existing data is string
         const safeOldSummary = typeof currentData === 'string' ? null : oldSummary;
 
         const newData = {
             content: text,
-            summary: summary !== null ? summary : safeOldSummary, // Preserves summary if not updating it
+            summary: summary !== null ? summary : safeOldSummary,
             updatedAt: new Date().toISOString()
         };
 
@@ -61,7 +73,7 @@ export default function JournalEditor({ initialDate, onBack }) {
         setContent(newContent);
         setStatus('saving');
 
-        // Debounce save
+        // Quick save debounce
         clearTimeout(window.saveTimeout);
         window.saveTimeout = setTimeout(async () => {
             await saveContent(newContent);
@@ -69,20 +81,28 @@ export default function JournalEditor({ initialDate, onBack }) {
         }, 500);
     };
 
+    const handleBackClick = async () => {
+        // Ensure final save and attempt summary before leaving
+        await saveContent(content);
+        if (content.length > 40) {
+            // We don't await this to keep UI snappy, 
+            // but we fire it off. The backend request will complete.
+            autoSummarize(content);
+        }
+        onBack();
+    };
+
+    // Keep handleBlur for just generic focus loss (clicking outside window)
     const handleBlur = async () => {
-        // Immediate save on blur to catch quick exits
         await saveContent(content);
         setStatus('saved');
-
-        // Trigger auto-summarize on exit/blur if enough text
-        autoSummarize(content);
     };
 
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
             try {
                 await del(getKey());
-                onBack(); // Return to dashboard
+                onBack();
             } catch (err) {
                 console.error(err);
                 alert('Failed to delete entry');
@@ -94,28 +114,17 @@ export default function JournalEditor({ initialDate, onBack }) {
     const autoSummarize = async (text) => {
         if (!text || text.length < 40) return;
 
-        // Check if we already have a summary? 
-        // For auto-mode, we only verify if it's worth generating.
-        // To be safe, we just fetch current state to see if valid summary exists?
-        // Actually, let's just try to generate if it's long enough.
-        // Optimally: check if summary exists.
-
         try {
             const currentData = await get(getKey());
-            // If we already have a summary, maybe skip? 
-            // User said "automatically generate it...". 
-            // If they edit significantly, we might want to update.
-            // For now, let's update if no summary OR if explicitly requested.
-            // Simple logic: If text is long enough, generate. 
-            // But to save API, let's only do it if !summary.
+            // Only generate if NO summary exists
             if (currentData && typeof currentData === 'object' && currentData.summary) {
-                return; // Already has summary
+                return;
             }
 
             const summary = await generateSummary(text);
             if (summary) {
                 await saveContent(text, summary);
-                // No notification
+                // Force status update if component still mounted (optional, ignore error)
             }
         } catch (err) {
             console.error("Auto-summary failed", err);
@@ -128,7 +137,6 @@ export default function JournalEditor({ initialDate, onBack }) {
             const summary = await generateSummary(content);
             if (summary) {
                 await saveContent(content, summary);
-                // No alert, just visual update via save check
             }
         } catch (err) {
             console.error(err);
@@ -137,17 +145,21 @@ export default function JournalEditor({ initialDate, onBack }) {
         }
     };
 
-    // Format Display Date
-    // Robust parsing for YYYY-MM-DD to Local Date
+    // Robust parsing for YYYY-MM-DD
     const [y, m, d] = targetDate.split('-').map(Number);
+    // Note: Month is 0-indexed in Date constructor
     const dateObj = new Date(y, m - 1, d);
 
-    const displayDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    // Fallback if Invalid Date
+    const isValidDate = !isNaN(dateObj.getTime());
+    const displayDate = isValidDate
+        ? dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+        : "New Entry";
 
     return (
         <div className="journal-container">
             <div className="editor-nav">
-                <button className="btn-back" onClick={onBack}>&lt; Back to Dashboard</button>
+                <button className="btn-back" onClick={handleBackClick}>&lt; Back to Dashboard</button>
                 <div className="editor-actions">
                     <button className="btn-action" onClick={handleSummarize} title="Auto-Summarize">
                         <Sparkles size={18} />
