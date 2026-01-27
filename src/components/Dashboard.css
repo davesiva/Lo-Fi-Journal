@@ -7,9 +7,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
+    margin-bottom: 20px;
+    /* Reduced margin */
+    /* Removed border-bottom from here, moved to after search */
 }
 
 .section-title {
@@ -17,6 +17,99 @@
     font-size: 2rem;
 }
 
+/* Search & Filter Section */
+.search-filter-container {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    padding: 8px 0;
+    background: transparent;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--accent-color);
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.filter-toggles {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid transparent;
+}
+
+.filter-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    font-weight: 500;
+}
+
+/* Timeline Grouping */
+.timeline-group {
+    margin-bottom: 30px;
+}
+
+.timeline-header {
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    padding: 10px 0;
+    z-index: 5;
+    border-bottom: 1px solid var(--border-color);
+    width: fit-content;
+    padding-right: 20px;
+}
+
+/* Existing Button Styles */
 .btn-new-entry {
     background: var(--text-primary);
     color: var(--bg-primary);

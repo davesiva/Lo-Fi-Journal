@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { keys, get, del, set } from 'idb-keyval';
-import { MoreVertical, Trash2, Edit2, Play, Mic, Lock } from 'lucide-react';
+import { MoreVertical, Trash2, Edit2, Play, Mic, Lock, Search } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
 import './Dashboard.css';
 
@@ -12,6 +12,8 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
     const [editValue, setEditValue] = useState(''); // Text content being edited
     const [showNewEntryMenu, setShowNewEntryMenu] = useState(false);
     const [entryToDelete, setEntryToDelete] = useState(null); // Key of entry to delete
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterType, setFilterType] = useState('all'); // 'all', 'text', 'voice', 'time-capsule'
 
     useEffect(() => {
         loadEntries();
@@ -216,6 +218,61 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
         }
     };
 
+
+    // Filter and Group Entries
+    const getFilteredAndGroupedEntries = () => {
+        let filtered = entries;
+
+        // 1. Filter by Search Query
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(entry => {
+                const dateMatch = entry.date.toLowerCase().includes(query);
+                const previewMatch = entry.preview && entry.preview.toLowerCase().includes(query);
+                return dateMatch || previewMatch;
+            });
+        }
+
+        // 2. Filter by Type
+        if (filterType !== 'all') {
+            filtered = filtered.filter(entry => entry.type === filterType);
+        }
+
+        // 3. Group by Month Year
+        const groups = {};
+        filtered.forEach(entry => {
+            const dateObj = new Date(entry.date);
+            // Check for invalid date
+            if (isNaN(dateObj.getTime())) {
+                const fallback = "Unknown Date";
+                if (!groups[fallback]) groups[fallback] = [];
+                groups[fallback].push(entry);
+            } else {
+                const key = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(entry);
+            }
+        });
+
+        const headers = [];
+        const seenHeaders = new Set();
+        filtered.forEach(entry => {
+            const dateObj = new Date(entry.date);
+            const key = isNaN(dateObj.getTime()) ? "Unknown Date" : dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            if (!seenHeaders.has(key)) {
+                seenHeaders.add(key);
+                headers.push(key);
+            }
+        });
+
+        return headers.map(header => ({
+            header,
+            items: groups[header]
+        }));
+    };
+
+    const groupedEntries = getFilteredAndGroupedEntries();
+
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
@@ -250,6 +307,55 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
                 </div>
             </div>
 
+            <div className="search-filter-container">
+                <div className="search-input-wrapper">
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Search entries..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <Search
+                        size={18}
+                        style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: 'var(--text-secondary)',
+                            pointerEvents: 'none'
+                        }}
+                    />
+                </div>
+                <div className="filter-toggles">
+                    <button
+                        className={`filter-btn ${filterType === 'all' ? 'active' : ''}`}
+                        onClick={() => setFilterType('all')}
+                    >
+                        All
+                    </button>
+                    <button
+                        className={`filter-btn ${filterType === 'text' ? 'active' : ''}`}
+                        onClick={() => setFilterType('text')}
+                    >
+                        <Edit2 size={14} /> Text
+                    </button>
+                    <button
+                        className={`filter-btn ${filterType === 'voice' ? 'active' : ''}`}
+                        onClick={() => setFilterType('voice')}
+                    >
+                        <Mic size={14} /> Voice
+                    </button>
+                    <button
+                        className={`filter-btn ${filterType === 'time-capsule' ? 'active' : ''}`}
+                        onClick={() => setFilterType('time-capsule')}
+                    >
+                        <Lock size={14} /> Capsules
+                    </button>
+                </div>
+            </div>
+
             {loading ? (
                 <div className="loading">Loading...</div>
             ) : entries.length === 0 ? (
@@ -257,63 +363,75 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
                     <p>No entries yet.</p>
                     <button className="btn-text" onClick={() => onNavigate(null)}>Start writing</button>
                 </div>
+            ) : groupedEntries.length === 0 ? (
+                <div className="empty-state" style={{ border: 'none', padding: '20px' }}>
+                    <p>No matching entries found.</p>
+                    <button className="btn-text" onClick={() => { setSearchQuery(''); setFilterType('all'); }}>Clear filters</button>
+                </div>
             ) : (
                 <div className="entries-list">
-                    {entries.map(entry => (
-                        <div
-                            key={entry.key}
-                            className="entry-card"
-                            onClick={(e) => handleCardClick(e, entry)}
-                        >
-                            <div className="entry-content">
-                                <div className="entry-header-row">
-                                    <div className="entry-date">{formatDate(entry.date)}</div>
-                                    {entry.type === 'voice' && <Mic size={16} className="voice-icon" />}
-                                    {entry.type === 'time-capsule' && (
-                                        entry.isLocked ? (
-                                            <Lock size={16} className="voice-icon" style={{ color: 'var(--text-secondary)' }} />
-                                        ) : (
-                                            <Lock size={16} className="voice-icon" style={{ color: 'var(--accent-color)' }} /> // Or use Unlock/Sparkles if imported
-                                        )
-                                    )}
-                                </div>
+                    {groupedEntries.map(group => (
+                        <div key={group.header} className="timeline-group">
+                            <div className="timeline-header">{group.header}</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                {group.items.map(entry => (
+                                    <div
+                                        key={entry.key}
+                                        className="entry-card"
+                                        onClick={(e) => handleCardClick(e, entry)}
+                                    >
+                                        <div className="entry-content">
+                                            <div className="entry-header-row">
+                                                <div className="entry-date">{formatDate(entry.date)}</div>
+                                                {entry.type === 'voice' && <Mic size={16} className="voice-icon" />}
+                                                {entry.type === 'time-capsule' && (
+                                                    entry.isLocked ? (
+                                                        <Lock size={16} className="voice-icon" style={{ color: 'var(--text-secondary)' }} />
+                                                    ) : (
+                                                        <Lock size={16} className="voice-icon" style={{ color: 'var(--accent-color)' }} /> // Or use Unlock/Sparkles if imported
+                                                    )
+                                                )}
+                                            </div>
 
-                                {editingKey === entry.key ? (
-                                    <input
-                                        type="text"
-                                        className="entry-rename-input"
-                                        value={editValue}
-                                        onChange={(e) => setEditValue(e.target.value)}
-                                        onBlur={saveRename}
-                                        onKeyDown={handleEditKeyDown}
-                                        onClick={(e) => e.stopPropagation()}
-                                        autoFocus
-                                    />
-                                ) : (
-                                    <div className={`entry-preview ${entry.isSummary ? 'summary-text' : ''}`}>
-                                        {entry.preview || '(Empty entry)'}
+                                            {editingKey === entry.key ? (
+                                                <input
+                                                    type="text"
+                                                    className="entry-rename-input"
+                                                    value={editValue}
+                                                    onChange={(e) => setEditValue(e.target.value)}
+                                                    onBlur={saveRename}
+                                                    onKeyDown={handleEditKeyDown}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    autoFocus
+                                                />
+                                            ) : (
+                                                <div className={`entry-preview ${entry.isSummary ? 'summary-text' : ''}`}>
+                                                    {entry.preview || '(Empty entry)'}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="menu-container">
+                                            <button
+                                                className="btn-menu-trigger"
+                                                onClick={(e) => toggleMenu(e, entry.key)}
+                                            >
+                                                <MoreVertical size={20} />
+                                            </button>
+
+                                            {activeMenu === entry.key && (
+                                                <div className="dropdown-menu">
+                                                    <button onClick={(e) => startRenaming(e, entry)}>
+                                                        <Edit2 size={16} /> Rename
+                                                    </button>
+                                                    <button onClick={(e) => handleDeleteClick(e, entry.key)} className="danger">
+                                                        <Trash2 size={16} /> Delete
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                )}
-                            </div>
-
-                            <div className="menu-container">
-                                <button
-                                    className="btn-menu-trigger"
-                                    onClick={(e) => toggleMenu(e, entry.key)}
-                                >
-                                    <MoreVertical size={20} />
-                                </button>
-
-                                {activeMenu === entry.key && (
-                                    <div className="dropdown-menu">
-                                        <button onClick={(e) => startRenaming(e, entry)}>
-                                            <Edit2 size={16} /> Rename
-                                        </button>
-                                        <button onClick={(e) => handleDeleteClick(e, entry.key)} className="danger">
-                                            <Trash2 size={16} /> Delete
-                                        </button>
-                                    </div>
-                                )}
+                                ))}
                             </div>
                         </div>
                     ))}
