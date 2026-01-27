@@ -1,0 +1,57 @@
+:root {
+  /* ttyl Color Palette (Warmer, Retro) */
+  --bg-primary: #FAF7F2;
+  /* Warm paper */
+  --text-primary: #1A1A1A;
+  /* Soft black */
+  --text-secondary: #555555;
+  --border-color: #222222;
+  /* Sharp contrast border */
+  --accent-color: #000000;
+
+  /* Typography */
+  --font-body: 'Courier Prime', monospace;
+  --font-ui: 'VT323', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: none;
+  /* Sharper text for pixel feel */
+}
+
+/* App Layout */
+.app-container {
+  max-width: 650px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+}
+
+/* Typography Utilities */
+h1,
+h2,
+h3 {
+  font-family: var(--font-ui);
+  font-weight: 400;
+  /* Pixel fonts usually don't need heavy bold */
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 1.2rem;
+  text-transform: lowercase;
+}

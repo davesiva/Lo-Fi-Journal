@@ -1,0 +1,115 @@
+.journal-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.editor-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-action:hover {
+    color: var(--text-primary);
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    color: #999;
+    /* Subtle warning */
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.btn-delete:hover {
+    color: #e53935;
+    /* Red on hover */
+    text-decoration: underline;
+}
+
+.btn-back:hover {
+    text-decoration: underline;
+}
+
+.journal-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.date-display {
+    font-family: var(--font-ui);
+    font-size: 2.5rem;
+    /* Much bigger as requested */
+    font-weight: 400;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.save-status {
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.save-status.saving,
+.save-status.saved {
+    opacity: 1;
+}
+
+.journal-editor {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    /* Warmer, larger text */
+    line-height: 1.8;
+    color: var(--text-primary);
+    resize: none;
+    outline: none;
+    padding: 0;
+    min-height: 60vh;
+}
+
+.journal-editor::placeholder {
+    color: #999;
+}
