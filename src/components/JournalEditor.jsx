@@ -116,10 +116,13 @@ export default function JournalEditor({ initialDate, onBack }) {
 
         try {
             const currentData = await get(getKey());
-            // Only generate if NO summary exists
-            if (currentData && typeof currentData === 'object' && currentData.summary) {
-                return;
-            }
+
+            // Allow re-summarization if the text has changed significantly or user wants updates.
+            // We previously blocked this if `currentData.summary` existed.
+            // Removing that block to allow "always fresh" summaries on significant edits.
+
+            // (Optional: We could check if text length matches roughly what served the summary, 
+            // but for now, let's just trust the debounce to not spam).
 
             const summary = await generateSummary(text);
             if (summary) {
