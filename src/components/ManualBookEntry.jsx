@@ -1,0 +1,130 @@
+import { useState } from 'react';
+import { set } from 'idb-keyval';
+import { ArrowLeft, Save } from 'lucide-react';
+import './JournalEditor.css'; // Reuse existing styles where possible
+
+export default function ManualBookEntry({ onSave, onCancel, initialData }) {
+    const [title, setTitle] = useState(initialData?.title || '');
+    const [author, setAuthor] = useState(initialData?.author || '');
+    const [startedDate, setStartedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [finishedDate, setFinishedDate] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!title.trim() || !author.trim()) return;
+
+        const bookData = {
+            id: `book-${Date.now()}`,
+            title,
+            author,
+            startedDate,
+            finishedDate,
+            createdAt: new Date().toISOString(),
+            type: 'book'
+        };
+
+        try {
+            await set(bookData.id, bookData);
+            onSave();
+        } catch (err) {
+            console.error("Failed to save book:", err);
+            alert("Failed to save book");
+        }
+    };
+
+    return (
+        <div className="editor-container">
+            <div className="editor-header">
+                <button onClick={onCancel} className="btn-icon">
+                    <ArrowLeft size={24} />
+                </button>
+                <h2 style={{ flex: 1, textAlign: 'center', margin: 0 }}>Add Book</h2>
+                <div style={{ width: 24 }}></div> {/* Spacer */}
+            </div>
+
+            <form onSubmit={handleSubmit} style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Title</label>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="The Great Gatsby"
+                        style={{
+                            width: '100%',
+                            padding: '12px',
+                            fontSize: '1.1rem',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            background: 'transparent',
+                            color: 'inherit'
+                        }}
+                        required
+                    />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Author</label>
+                    <input
+                        type="text"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        placeholder="F. Scott Fitzgerald"
+                        style={{
+                            width: '100%',
+                            padding: '12px',
+                            fontSize: '1.1rem',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            background: 'transparent',
+                            color: 'inherit'
+                        }}
+                        required
+                    />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Date Read</label>
+                    <input
+                        type="date"
+                        value={finishedDate || startedDate}
+                        onChange={(e) => {
+                            setFinishedDate(e.target.value);
+                            setStartedDate(e.target.value);
+                        }}
+                        style={{
+                            width: '100%',
+                            padding: '12px',
+                            fontSize: '1rem',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            background: 'transparent',
+                            color: 'inherit'
+                        }}
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    style={{
+                        width: '100%',
+                        padding: '15px',
+                        backgroundColor: 'var(--text-color)',
+                        color: 'var(--bg-color)',
+                        border: 'none',
+                        borderRadius: '30px',
+                        fontSize: '1.1rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px'
+                    }}
+                >
+                    <Save size={20} />
+                    Save to Bookshelf
+                </button>
+            </form>
+        </div>
+    );
+}

@@ -27,7 +27,7 @@ app.post('/api/generate', async (req, res) => {
     }
 
     try {
-        const { prompt, audio } = req.body;
+        const { prompt, audio, image } = req.body;
         console.log("Processing prompt:", prompt.substring(0, 50) + "...");
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
@@ -35,9 +35,6 @@ app.post('/api/generate', async (req, res) => {
         if (audio) {
             console.log("Processing Audio...");
             // Processing audio
-            // audio input expects: { inlineData: { data: "base64...", mimeType: "..." } }
-            // The frontend sends the full part object, or we can construct it here.
-            // Let's assume frontend sends { data: "base64", mimeType: "..." }
             const audioPart = {
                 inlineData: {
                     data: audio.data,
@@ -45,6 +42,16 @@ app.post('/api/generate', async (req, res) => {
                 }
             };
             result = await model.generateContent([prompt, audioPart]);
+        } else if (image) {
+            console.log("Processing Image...");
+            // Processing image
+            const imagePart = {
+                inlineData: {
+                    data: image.data,
+                    mimeType: image.mimeType
+                }
+            };
+            result = await model.generateContent([prompt, imagePart]);
         } else {
             // Processing text
             result = await model.generateContent(prompt);

@@ -195,3 +195,13 @@
     cursor: pointer;
     margin-top: 10px;
 }
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}

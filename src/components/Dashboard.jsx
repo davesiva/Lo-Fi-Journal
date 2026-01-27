@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { keys, get, del, set } from 'idb-keyval';
-import { MoreVertical, Trash2, Edit2, Play, Mic } from 'lucide-react';
+import { MoreVertical, Trash2, Edit2, Play, Mic, Lock } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
 import './Dashboard.css';
 
-export default function Dashboard({ onNavigate, onNavigateVoice }) {
+export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsule }) {
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeMenu, setActiveMenu] = useState(null); // Key of entry with open menu
@@ -29,17 +29,18 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
         try {
             const allKeys = await keys();
 
-            // Filter for journal AND voice entries
-            const relevantKeys = allKeys.filter(k => k.startsWith('journal-') || k.startsWith('voice-'));
+            // Filter for journal, voice, AND time-capsule entries
+            const relevantKeys = allKeys.filter(k => k.startsWith('journal-') || k.startsWith('voice-') || k.startsWith('time-capsule-'));
 
             const loadedEntries = await Promise.all(
                 relevantKeys.map(async (key) => {
                     const data = await get(key);
                     const isVoice = key.startsWith('voice-');
+                    const isCapsule = key.startsWith('time-capsule-');
 
                     // Determine Date
                     let dateStr = '';
-                    if (isVoice) {
+                    if (isVoice || isCapsule) {
                         dateStr = data.createdAt || new Date().toISOString();
                     } else {
                         dateStr = key.replace('journal-', '');
@@ -48,8 +49,24 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                     // Determine Preview/Title
                     let preview = '';
                     let isSummary = false;
+                    let isLocked = false;
+                    let unlockDate = null;
 
-                    if (isVoice) {
+                    if (isCapsule) {
+                        unlockDate = data.unlockDate;
+                        isLocked = new Date(unlockDate).getTime() > Date.now();
+
+                        if (isLocked) {
+                            preview = "Locked Time Capsule";
+                        } else {
+                            if (data.subtype === 'guided') {
+                                preview = "Reflections from the Past (Ready to Unlock)";
+                            } else {
+                                preview = data.content || "Time Capsule";
+                            }
+                        }
+                        isSummary = true; // Use summary style for capsules
+                    } else if (isVoice) {
                         preview = data.summary || "Voice Note";
                         isSummary = true;
                     } else {
@@ -72,8 +89,12 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                         date: dateStr,
                         preview,
                         isSummary,
-                        type: isVoice ? 'voice' : 'text',
-                        audio: isVoice ? data.audio : null
+                        type: isCapsule ? 'time-capsule' : (isVoice ? 'voice' : 'text'),
+                        subtype: isCapsule ? data.subtype : null,
+                        audio: isVoice ? data.audio : null,
+                        isLocked,
+                        unlockDate,
+                        originalData: isCapsule ? data : null // Keep ref to data for capsules
                     };
                 })
             );
@@ -164,7 +185,26 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
     const handleCardClick = (e, entry) => {
         if (editingKey === entry.key) return;
 
-        if (entry.type === 'voice') {
+        if (entry.type === 'time-capsule') {
+            if (entry.isLocked) {
+                const unlockDate = new Date(entry.unlockDate).toLocaleDateString();
+                alert(`This capsule is locked until ${unlockDate}. Patience!`);
+                return;
+            }
+
+            // Unlocked!
+            if (entry.subtype === 'guided') {
+                // Trigger guided unlock flow
+                if (onNavigateCapsule) onNavigateCapsule(entry);
+            } else {
+                // Freeform - treated like a text entry for now, or custom view
+                // For now, just show content in alert or navigate to write view with content
+                // Re-using write view might be tricky without Date. 
+                // Let's pass the entry to the parent to handle viewing
+                if (onNavigateCapsule) onNavigateCapsule(entry);
+            }
+
+        } else if (entry.type === 'voice') {
             if (entry.audio) {
                 const audio = new Audio(URL.createObjectURL(entry.audio));
                 audio.play();
@@ -200,6 +240,11 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                             }}>
                                 <Mic size={16} /> Voice Note
                             </button>
+                            <button onClick={() => {
+                                if (onNavigateCapsule) onNavigateCapsule();
+                            }}>
+                                <Lock size={16} /> Time Capsule
+                            </button>
                         </div>
                     )}
                 </div>
@@ -224,6 +269,13 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                                 <div className="entry-header-row">
                                     <div className="entry-date">{formatDate(entry.date)}</div>
                                     {entry.type === 'voice' && <Mic size={16} className="voice-icon" />}
+                                    {entry.type === 'time-capsule' && (
+                                        entry.isLocked ? (
+                                            <Lock size={16} className="voice-icon" style={{ color: 'var(--text-secondary)' }} />
+                                        ) : (
+                                            <Lock size={16} className="voice-icon" style={{ color: 'var(--accent-color)' }} /> // Or use Unlock/Sparkles if imported
+                                        )
+                                    )}
                                 </div>
 
                                 {editingKey === entry.key ? (
