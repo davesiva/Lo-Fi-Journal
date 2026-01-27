@@ -15,21 +15,25 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' })); // Increased limit for audio files
 
 // Initialize Gemini
-const API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+const API_KEY = process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
 
 // API Route: Generate Content
 app.post('/api/generate', async (req, res) => {
+    console.log("Received API Request");
     if (!genAI) {
+        console.error("Server missing API Key during request");
         return res.status(500).json({ error: "Server missing API Key" });
     }
 
     try {
         const { prompt, audio } = req.body;
+        console.log("Processing prompt:", prompt.substring(0, 50) + "...");
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         let result;
         if (audio) {
+            console.log("Processing Audio...");
             // Processing audio
             // audio input expects: { inlineData: { data: "base64...", mimeType: "..." } }
             // The frontend sends the full part object, or we can construct it here.
@@ -48,6 +52,7 @@ app.post('/api/generate', async (req, res) => {
 
         const response = await result.response;
         const text = response.text().trim();
+        console.log("Generated:", text);
         res.json({ text });
 
     } catch (error) {
