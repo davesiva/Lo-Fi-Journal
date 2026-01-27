@@ -10,6 +10,7 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
     const [editingKey, setEditingKey] = useState(null); // Key of entry being edited
     const [editValue, setEditValue] = useState(''); // Text content being edited
     const [showNewEntryMenu, setShowNewEntryMenu] = useState(false);
+    const [entryToDelete, setEntryToDelete] = useState(null); // Key of entry to delete
 
     useEffect(() => {
         loadEntries();
@@ -98,16 +99,27 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
         return date.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' });
     };
 
-    const handleDelete = async (e, key) => {
+    const handleDeleteClick = (e, key) => {
         e.stopPropagation();
-        if (window.confirm('Delete this entry?')) {
-            try {
-                await del(key);
-                loadEntries();
-            } catch (err) {
-                console.error(err);
-            }
+        setActiveMenu(null);
+        setEntryToDelete(key);
+    };
+
+    const confirmDelete = async () => {
+        if (!entryToDelete) return;
+
+        try {
+            await del(entryToDelete);
+            loadEntries();
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setEntryToDelete(null);
         }
+    };
+
+    const cancelDelete = () => {
+        setEntryToDelete(null);
     };
 
     const startRenaming = (e, entry) => {
@@ -244,7 +256,7 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                                         <button onClick={(e) => startRenaming(e, entry)}>
                                             <Edit2 size={16} /> Rename
                                         </button>
-                                        <button onClick={(e) => handleDelete(e, entry.key)} className="danger">
+                                        <button onClick={(e) => handleDeleteClick(e, entry.key)} className="danger">
                                             <Trash2 size={16} /> Delete
                                         </button>
                                     </div>
@@ -254,6 +266,19 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                     ))}
                 </div>
             )}
-        </div>
+            {entryToDelete && (
+                <div className="modal-overlay" onClick={cancelDelete}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <h3 className="modal-title">Delete Entry?</h3>
+                        <p className="modal-text">This action cannot be undone.</p>
+                        <div className="modal-actions">
+                            <button className="btn-modal cancel" onClick={cancelDelete}>Cancel</button>
+                            <button className="btn-modal delete" onClick={confirmDelete}>Delete</button>
+                        </div>
+                    </div>
+                </div>
+            )
+            }
+        </div >
     );
 }
