@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { keys, get, del, set } from 'idb-keyval';
 import { MoreVertical, Trash2, Edit2, Play, Mic } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 import './Dashboard.css';
 
 export default function Dashboard({ onNavigate, onNavigateVoice }) {
@@ -266,19 +267,17 @@ export default function Dashboard({ onNavigate, onNavigateVoice }) {
                     ))}
                 </div>
             )}
-            {entryToDelete && (
-                <div className="modal-overlay" onClick={cancelDelete}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()}>
-                        <h3 className="modal-title">Delete Entry?</h3>
-                        <p className="modal-text">This action cannot be undone.</p>
-                        <div className="modal-actions">
-                            <button className="btn-modal cancel" onClick={cancelDelete}>Cancel</button>
-                            <button className="btn-modal delete" onClick={confirmDelete}>Delete</button>
-                        </div>
-                    </div>
-                </div>
-            )
-            }
+            <ConfirmModal
+                isOpen={!!entryToDelete}
+                title="Delete Entry?"
+                message="This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+                isDanger={true}
+            />
+
         </div >
     );
 }

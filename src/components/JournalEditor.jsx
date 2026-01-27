@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { get, set, del } from 'idb-keyval';
 import { generateSummary } from '../services/ai';
+import ConfirmModal from './ConfirmModal';
 import { Sparkles } from 'lucide-react';
 import './JournalEditor.css';
 
 export default function JournalEditor({ initialDate, onBack }) {
     const [content, setContent] = useState('');
     const [status, setStatus] = useState('loading'); // loading, saved, saving
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const textareaRef = useRef(null);
 
     // Use prop date or today (Safely formatted as YYYY-MM-DD local)
@@ -98,15 +100,17 @@ export default function JournalEditor({ initialDate, onBack }) {
         setStatus('saved');
     };
 
-    const handleDelete = async () => {
-        if (window.confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
-            try {
-                await del(getKey());
-                onBack();
-            } catch (err) {
-                console.error(err);
-                alert('Failed to delete entry');
-            }
+    const handleDeleteClick = () => {
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await del(getKey());
+            onBack();
+        } catch (err) {
+            console.error(err);
+            alert('Failed to delete entry');
         }
     };
 
@@ -167,7 +171,7 @@ export default function JournalEditor({ initialDate, onBack }) {
                     <button className="btn-action" onClick={handleSummarize} title="Auto-Summarize">
                         <Sparkles size={18} />
                     </button>
-                    <button className="btn-delete" onClick={handleDelete}>Delete Entry</button>
+                    <button className="btn-delete" onClick={handleDeleteClick}>Delete Entry</button>
                 </div>
             </div>
 
@@ -186,6 +190,17 @@ export default function JournalEditor({ initialDate, onBack }) {
                 onBlur={handleBlur}
                 placeholder="What's on your mind today?"
                 autoFocus
+            />
+
+            <ConfirmModal
+                isOpen={showDeleteModal}
+                title="Delete Entry?"
+                message="Are you sure you want to delete this entry? This cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                onConfirm={confirmDelete}
+                onCancel={() => setShowDeleteModal(false)}
+                isDanger={true}
             />
         </div>
     );
