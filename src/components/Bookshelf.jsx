@@ -3,6 +3,7 @@ import { keys, get, del } from 'idb-keyval';
 import { Plus, BookOpen, Trash2, Edit2, ScanLine, Type } from 'lucide-react';
 import ManualBookEntry from './ManualBookEntry';
 import BookScanner from './BookScanner';
+import ConfirmModal from './ConfirmModal';
 import './Dashboard.css'; // Reusing dashboard styles for consistency
 
 export default function Bookshelf({ onNavigateHome }) {
@@ -11,6 +12,7 @@ export default function Bookshelf({ onNavigateHome }) {
     const [loading, setLoading] = useState(true);
     const [scanData, setScanData] = useState(null);
     const [showAddMenu, setShowAddMenu] = useState(false);
+    const [bookToDelete, setBookToDelete] = useState(null);
 
     useEffect(() => {
         loadBooks();
@@ -38,12 +40,26 @@ export default function Bookshelf({ onNavigateHome }) {
         }
     };
 
-    const handleDelete = async (e, id) => {
+    const handleDeleteClick = (e, book) => {
         e.stopPropagation();
-        if (window.confirm("Remove this book from your shelf?")) {
-            await del(id);
+        setBookToDelete(book);
+    };
+
+    const confirmDelete = async () => {
+        if (!bookToDelete) return;
+
+        try {
+            await del(bookToDelete.id);
             loadBooks();
+        } catch (err) {
+            console.error("Failed to delete book:", err);
+        } finally {
+            setBookToDelete(null);
         }
+    };
+
+    const cancelDelete = () => {
+        setBookToDelete(null);
     };
 
     const handleScanComplete = (data) => {
@@ -82,7 +98,18 @@ export default function Bookshelf({ onNavigateHome }) {
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h2 className="section-title">My Bookshelf</h2>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <h2 className="section-title" style={{ margin: 0 }}>My Bookshelf</h2>
+                    <p style={{
+                        fontSize: '0.9rem',
+                        color: 'var(--text-secondary)',
+                        fontFamily: 'var(--font-body)',
+                        margin: 0,
+                        fontStyle: 'italic'
+                    }}>
+                        your digital library
+                    </p>
+                </div>
                 <div style={{ position: 'relative' }}>
                     <button
                         className="btn-new-entry"
@@ -148,7 +175,7 @@ export default function Bookshelf({ onNavigateHome }) {
                             <div className="menu-container">
                                 <button
                                     className="btn-menu-trigger"
-                                    onClick={(e) => handleDelete(e, book.id)}
+                                    onClick={(e) => handleDeleteClick(e, book)}
                                     title="Delete"
                                 >
                                     <Trash2 size={16} />
@@ -158,6 +185,16 @@ export default function Bookshelf({ onNavigateHome }) {
                     ))}
                 </div>
             )}
+            <ConfirmModal
+                isOpen={!!bookToDelete}
+                title="Remove from Shelf?"
+                message="This book will be permanently deleted."
+                confirmText="Remove"
+                cancelText="Cancel"
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+                isDanger={true}
+            />
         </div>
     );
 }

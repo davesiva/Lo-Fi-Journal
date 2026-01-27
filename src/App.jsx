@@ -6,6 +6,8 @@ import TimeCapsuleComposer from './components/TimeCapsuleComposer';
 import TimeCapsuleViewer from './components/TimeCapsuleViewer';
 import Bookshelf from './components/Bookshelf';
 
+import bookshelfIcon from './assets/bookshelf-icon.png';
+
 function App() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf'
   const [selectedDate, setSelectedDate] = useState(null);
@@ -68,12 +70,32 @@ function App() {
             fontSize: '1.2rem',
             cursor: 'pointer',
             fontFamily: 'inherit',
-            opacity: view === 'bookshelf' ? 1 : 0.6,
+            // opacity: view === 'bookshelf' ? 1 : 0.6, // REMOVED to fix mix-blend-mode stacking context
             textDecoration: view === 'bookshelf' ? 'underline' : 'none',
-            color: 'var(--text-color)'
+            color: view === 'bookshelf' ? 'var(--text-color)' : 'var(--text-secondary)', // Text fade
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0px'
           }}
         >
-          Bookshelf
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            Bookshelf
+            <img
+              src={bookshelfIcon}
+              alt=""
+              style={{
+                height: '24px',
+                width: 'auto',
+                marginLeft: '-2px', // Pull closer to text
+                imageRendering: 'pixelated',
+                // Use brightness to fade the black to gray, avoid opacity logic issues
+                filter: view === 'bookshelf' ? 'none' : 'contrast(1.2) brightness(1.5) grayscale(100%)',
+                mixBlendMode: 'multiply',
+                position: 'relative',
+                top: '0px' // Down 1px from -1px
+              }}
+            />
+          </span>
         </button>
       </header>
 

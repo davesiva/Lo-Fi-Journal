@@ -105,7 +105,7 @@ export default function TimeCapsuleComposer({ onBack }) {
                             transition: 'all 0.2s'
                         }}
                     >
-                        Freeform Note
+                        Freeform
                     </button>
                     <button
                         onClick={() => setMode('guided')}
@@ -121,7 +121,7 @@ export default function TimeCapsuleComposer({ onBack }) {
                             transition: 'all 0.2s'
                         }}
                     >
-                        Guided Reflection
+                        Guided
                     </button>
                 </div>
 
@@ -198,7 +198,7 @@ export default function TimeCapsuleComposer({ onBack }) {
                     {scheduleType === 'fixed' && (
                         <input
                             type="date"
-                            className="date-picker-input" // Needs styling
+                            className="date-picker-input"
                             value={unlockDate}
                             onChange={(e) => setUnlockDate(e.target.value)}
                             min={new Date().toISOString().split('T')[0]}
@@ -207,10 +207,12 @@ export default function TimeCapsuleComposer({ onBack }) {
                                 padding: '12px',
                                 borderRadius: '8px',
                                 border: '1px solid var(--border-color)',
-                                backgroundColor: 'var(--input-bg)',
+                                backgroundColor: 'var(--bg-primary)', // Ensure it matches theme
                                 color: 'var(--text-primary)',
-                                fontFamily: 'inherit',
-                                marginBottom: '15px'
+                                fontFamily: 'var(--font-ui)', // Use UI font
+                                fontSize: '1.2rem',
+                                marginBottom: '15px',
+                                outline: 'none'
                             }}
                         />
                     )}
@@ -224,7 +226,7 @@ export default function TimeCapsuleComposer({ onBack }) {
                         width: '100%',
                         justifyContent: 'center',
                         background: 'var(--text-primary)',
-                        color: 'var(--bg-color)',
+                        color: 'var(--bg-primary)',
                         marginBottom: '20px'
                     }}
                 >
