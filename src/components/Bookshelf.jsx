@@ -16,6 +16,13 @@ export default function Bookshelf({ onNavigateHome }) {
 
     useEffect(() => {
         loadBooks();
+
+        const handleClickOutside = () => {
+            setShowAddMenu(false);
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
     const loadBooks = async () => {
@@ -113,7 +120,10 @@ export default function Bookshelf({ onNavigateHome }) {
                 <div style={{ position: 'relative' }}>
                     <button
                         className="btn-new-entry"
-                        onClick={() => setShowAddMenu(!showAddMenu)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowAddMenu(!showAddMenu);
+                        }}
                     >
                         <Plus size={18} /> Add Book
                     </button>
