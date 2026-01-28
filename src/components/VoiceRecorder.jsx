@@ -4,7 +4,7 @@ import { generateAudioTitle } from '../services/ai';
 import { Mic, Square, Play, Trash2, Save, ArrowLeft } from 'lucide-react';
 import './VoiceRecorder.css';
 
-export default function VoiceRecorder({ onBack }) {
+export default function VoiceRecorder({ onBack, theme }) {
     const [state, setState] = useState('idle'); // idle, recording, review
     const [audioURL, setAudioURL] = useState(null);
     const [recordingTime, setRecordingTime] = useState(0);
@@ -106,55 +106,107 @@ export default function VoiceRecorder({ onBack }) {
     };
 
     return (
-        <div className="voice-container">
+        <div className={`voice-container ${theme === 'modern' ? 'modern-voice' : ''}`}>
             <button className="btn-back-voice" onClick={onBack}>
                 <ArrowLeft size={18} /> Back
             </button>
 
-            <div className="recorder-display">
-                <div className="tape-window">
-                    <div className={`spools ${state === 'recording' ? 'spinning' : ''}`}>
-                        <div className="spool left"></div>
-                        <div className="spool right"></div>
-                    </div>
-                </div>
-                <div className="time-display">{formatTime(recordingTime)}</div>
-                {state === 'recording' && <div className="rec-indicator">REC</div>}
-            </div>
+            {theme === 'modern' ? (
+                // Modern UI
+                <div className="modern-recorder">
+                    <div className="modern-time-display">{formatTime(recordingTime)}</div>
 
-            <div className="controls">
-                {state === 'idle' && (
-                    <button className="btn-record" onClick={startRecording}>
-                        <Mic size={32} />
-                    </button>
-                )}
-
-                {state === 'recording' && (
-                    <button className="btn-stop" onClick={stopRecording}>
-                        <Square size={32} fill="currentColor" />
-                    </button>
-                )}
-
-                {state === 'review' && (
-                    <div className="review-controls">
-                        <audio src={audioURL} controls className="audio-player" />
-                        <div className="action-buttons">
-                            <button className="btn-discard" onClick={discardRecording} title="Discard">
-                                <Trash2 size={24} />
-                            </button>
-                            <button className="btn-save-voice" onClick={saveRecording} title="Save Tape">
-                                <Save size={24} />
-                            </button>
+                    {state === 'recording' && (
+                        <div className="audio-waves">
+                            <div className="wave"></div>
+                            <div className="wave"></div>
+                            <div className="wave"></div>
+                            <div className="wave"></div>
+                            <div className="wave"></div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
 
-            <p className="instruction-text">
-                {state === 'idle' ? 'Tap mic to record.' :
-                    state === 'recording' ? 'Recording...' :
-                        'Review your tape.'}
-            </p>
+                    <div className="modern-controls">
+                        {state === 'idle' && (
+                            <button className="btn-modern-record" onClick={startRecording}>
+                                <div className="record-dot"></div>
+                            </button>
+                        )}
+
+                        {state === 'recording' && (
+                            <button className="btn-modern-stop" onClick={stopRecording}>
+                                <Square size={24} fill="currentColor" />
+                            </button>
+                        )}
+
+                        {state === 'review' && (
+                            <div className="modern-review-controls">
+                                <audio src={audioURL} controls className="audio-player-modern" />
+                                <div className="modern-action-buttons">
+                                    <button className="btn-modern-discard" onClick={discardRecording}>
+                                        <Trash2 size={20} />
+                                    </button>
+                                    <button className="btn-modern-save" onClick={saveRecording}>
+                                        Save Recording
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <p className="modern-instruction">
+                        {state === 'idle' ? 'Tap to record' :
+                            state === 'recording' ? 'Recording...' : 'Review'}
+                    </p>
+                </div>
+            ) : (
+                // Classic Cassette UI
+                <>
+                    <div className="recorder-display">
+                        <div className="tape-window">
+                            <div className={`spools ${state === 'recording' ? 'spinning' : ''}`}>
+                                <div className="spool left"></div>
+                                <div className="spool right"></div>
+                            </div>
+                        </div>
+                        <div className="time-display">{formatTime(recordingTime)}</div>
+                        {state === 'recording' && <div className="rec-indicator">REC</div>}
+                    </div>
+
+                    <div className="controls">
+                        {state === 'idle' && (
+                            <button className="btn-record" onClick={startRecording}>
+                                <Mic size={32} />
+                            </button>
+                        )}
+
+                        {state === 'recording' && (
+                            <button className="btn-stop" onClick={stopRecording}>
+                                <Square size={32} fill="currentColor" />
+                            </button>
+                        )}
+
+                        {state === 'review' && (
+                            <div className="review-controls">
+                                <audio src={audioURL} controls className="audio-player" />
+                                <div className="action-buttons">
+                                    <button className="btn-discard" onClick={discardRecording} title="Discard">
+                                        <Trash2 size={24} />
+                                    </button>
+                                    <button className="btn-save-voice" onClick={saveRecording} title="Save Tape">
+                                        <Save size={24} />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <p className="instruction-text">
+                        {state === 'idle' ? 'Tap mic to record.' :
+                            state === 'recording' ? 'Recording...' :
+                                'Review your tape.'}
+                    </p>
+                </>
+            )}
         </div>
     );
 }

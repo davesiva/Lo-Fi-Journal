@@ -156,7 +156,7 @@ function App() {
           )}
 
           {view === 'voice' && (
-            <VoiceRecorder onBack={navigateHome} />
+            <VoiceRecorder onBack={navigateHome} theme={theme} />
           )}
 
           {view === 'time-capsule' && (
