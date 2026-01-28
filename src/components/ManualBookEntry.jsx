@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { set } from 'idb-keyval';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Calendar } from 'lucide-react';
+import PixelCalendar from './PixelCalendar';
 import './JournalEditor.css'; // Reuse existing styles where possible
 
 export default function ManualBookEntry({ onSave, onCancel, initialData }) {
@@ -8,6 +9,7 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
     const [author, setAuthor] = useState(initialData?.author || '');
     const [startedDate, setStartedDate] = useState(new Date().toISOString().split('T')[0]);
     const [finishedDate, setFinishedDate] = useState('');
+    const [showCalendar, setShowCalendar] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,23 +87,62 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
 
                 <div className="form-group" style={{ marginBottom: '20px' }}>
                     <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Date Read</label>
-                    <input
-                        type="date"
-                        value={finishedDate || startedDate}
-                        onChange={(e) => {
-                            setFinishedDate(e.target.value);
-                            setStartedDate(e.target.value);
-                        }}
-                        style={{
+                    {!finishedDate ? (
+                        <button
+                            type="button"
+                            onClick={() => setShowCalendar(!showCalendar)}
+                            style={{
+                                width: '100%',
+                                padding: '12px',
+                                fontSize: '1.2rem',
+                                border: '2px solid var(--border-color)',
+                                borderRadius: '8px',
+                                background: '#fff',
+                                color: 'inherit',
+                                textAlign: 'left',
+                                fontFamily: 'var(--font-ui)',
+                                cursor: 'pointer',
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                            }}
+                        >
+                            <span>mm/dd/yyyy</span>
+                            <Calendar size={18} />
+                        </button>
+                    ) : (
+                        <div style={{
                             width: '100%',
                             padding: '12px',
-                            fontSize: '1rem',
-                            border: '1px solid var(--border-color)',
+                            border: '2px solid var(--text-primary)',
                             borderRadius: '8px',
-                            background: 'transparent',
-                            color: 'inherit'
-                        }}
-                    />
+                            background: '#fff',
+                            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                        }}>
+                            <span style={{ fontFamily: 'var(--font-ui)', fontSize: '1.2rem' }}>
+                                {new Date(finishedDate).toLocaleDateString()}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => setShowCalendar(!showCalendar)}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                            >
+                                Change
+                            </button>
+                        </div>
+                    )}
+
+                    {showCalendar && (
+                        <div style={{ marginTop: '10px' }}>
+                            <PixelCalendar
+                                value={finishedDate}
+                                onChange={(date) => {
+                                    setFinishedDate(date);
+                                    setStartedDate(date); // Sync for now
+                                    setShowCalendar(false);
+                                }}
+                                onClose={() => setShowCalendar(false)}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 <button

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { set } from 'idb-keyval';
 import { ArrowLeft, Send, Sparkles, Wand2, Calendar, Lock } from 'lucide-react';
 import './JournalEditor.css'; // Reusing general styles for consistency
+import PixelCalendar from './PixelCalendar';
 
 const GUIDED_QUESTIONS = [
     "What is your biggest concern right now?",
@@ -24,6 +25,7 @@ export default function TimeCapsuleComposer({ onBack }) {
     const [unlockDate, setUnlockDate] = useState('');
     const [scheduleType, setScheduleType] = useState('random'); // 'random', 'fixed', 'preset'
     const [isSealing, setIsSealing] = useState(false);
+    const [showCalendar, setShowCalendar] = useState(false);
 
     const handleSave = async (e) => {
         e.preventDefault();
@@ -205,25 +207,61 @@ export default function TimeCapsuleComposer({ onBack }) {
                     </div>
 
                     {scheduleType === 'fixed' && (
-                        <input
-                            type="date"
-                            className="date-picker-input"
-                            value={unlockDate}
-                            onChange={(e) => setUnlockDate(e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                borderRadius: '8px',
-                                border: '1px solid var(--border-color)',
-                                backgroundColor: 'var(--bg-primary)', // Ensure it matches theme
-                                color: 'var(--text-primary)',
-                                fontFamily: 'var(--font-ui)', // Use UI font
-                                fontSize: '1.2rem',
-                                marginBottom: '15px',
-                                outline: 'none'
-                            }}
-                        />
+                        <div style={{ marginBottom: '15px' }}>
+                            {!unlockDate ? (
+                                <button
+                                    onClick={() => setShowCalendar(!showCalendar)}
+                                    style={{
+                                        border: '2px solid var(--border-color)',
+                                        background: '#fff',
+                                        padding: '12px',
+                                        borderRadius: '8px',
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        fontFamily: 'var(--font-ui)',
+                                        fontSize: '1.2rem',
+                                        cursor: 'pointer',
+                                        display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                                    }}
+                                >
+                                    <span>Select a date...</span>
+                                    <Calendar size={18} />
+                                </button>
+                            ) : (
+                                <div style={{
+                                    border: '2px solid var(--text-primary)',
+                                    background: '#fff',
+                                    padding: '12px',
+                                    borderRadius: '8px',
+                                    width: '100%',
+                                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                                }}>
+                                    <span style={{ fontFamily: 'var(--font-ui)', fontSize: '1.2rem' }}>
+                                        Unlocks: {new Date(unlockDate).toLocaleDateString()}
+                                    </span>
+                                    <button
+                                        onClick={() => setShowCalendar(!showCalendar)}
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                                    >
+                                        Change
+                                    </button>
+                                </div>
+                            )}
+
+                            {showCalendar && (
+                                <div style={{ marginTop: '10px' }}>
+                                    <PixelCalendar
+                                        value={unlockDate}
+                                        minDate={new Date().toISOString()}
+                                        onChange={(date) => {
+                                            setUnlockDate(date);
+                                            setShowCalendar(false);
+                                        }}
+                                        onClose={() => setShowCalendar(false)}
+                                    />
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
 

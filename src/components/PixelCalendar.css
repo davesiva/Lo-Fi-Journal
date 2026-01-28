@@ -1,0 +1,109 @@
+.pixel-calendar {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    padding: 15px;
+    width: 320px;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-ui);
+    user-select: none;
+    background: #fff;
+    z-index: 100;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.month-display {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.nav-btn {
+    background: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    border-radius: 4px;
+}
+
+.nav-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--border-color);
+}
+
+.days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.day-name {
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.day-cell {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    transition: all 0.1s;
+}
+
+.day-cell:hover:not(.disabled) {
+    background: #eee;
+    border: 1px dashed var(--text-secondary);
+}
+
+.day-cell.prev,
+.day-cell.next {
+    color: #ccc;
+}
+
+.day-cell.today {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.day-cell.selected {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border: 2px solid var(--text-primary);
+}
+
+.day-cell.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.day-cell.disabled:hover {
+    background: none;
+    border: 1px solid transparent;
+}
