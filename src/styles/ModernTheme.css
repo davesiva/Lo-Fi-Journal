@@ -161,6 +161,11 @@
     /* Ensure z-index works */
 }
 
+.modern-theme .entry-card.z-index-high {
+    z-index: 50 !important;
+    position: relative;
+}
+
 /* Prevent image inversion since we aren't doing the high contrast look */
 .modern-theme .entry-card:hover img {
     filter: none !important;

@@ -377,7 +377,7 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
                                 {group.items.map(entry => (
                                     <div
                                         key={entry.key}
-                                        className="entry-card"
+                                        className={`entry-card ${activeMenu === entry.key ? 'z-index-high' : ''}`}
                                         onClick={(e) => handleCardClick(e, entry)}
                                     >
                                         <div className="entry-content">
