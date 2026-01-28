@@ -1,0 +1,322 @@
+/* Modern Theme (Flowy, Pastel, Soft) */
+
+.modern-theme {
+    /* Overrides for the Modern Theme */
+    --bg-primary: #f8f9fa;
+    /* Very light gray/white */
+    --text-primary: #1a1a1a;
+    /* Almost black */
+    --text-secondary: #4a4a4a;
+    /* Darker grey */
+    --border-color: #d1d1d1;
+    /* Neutral grey border */
+    --accent-color: #1a1a1a;
+    /* Monochrome accent */
+
+    --font-body: 'Lora', serif;
+    --font-ui: 'Playfair Display', serif;
+    /* Headers get the flowy serif */
+
+    /* Global Softness */
+    min-height: 100vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #f0f4f8;
+    /* Soft blue-grey background outside app */
+}
+
+/* App Container Wrapper */
+.modern-theme .app-container {
+    background-color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 10px 15px -3px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+    /* Subtle glass border */
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 40px;
+    /* More breathing room */
+    max-width: 700px;
+    transition: all 0.3s ease;
+}
+
+/* Typography Overrides */
+.modern-theme h1,
+.modern-theme h2,
+.modern-theme h3 {
+    font-family: var(--font-ui);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #1a202c;
+}
+
+.modern-theme p,
+.modern-theme span,
+.modern-theme button,
+.modern-theme input,
+.modern-theme textarea,
+.modern-theme label {
+    font-family: var(--font-body);
+}
+
+.modern-theme label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.modern-theme .app-header {
+    border-bottom: 1px solid var(--border-color) !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Button Styling (Pill/Soft) */
+.modern-theme button {
+    border-radius: 9999px;
+    /* Pill shape */
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+    background: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-family: var(--font-body);
+    text-transform: none;
+    /* No lowercase enforcement */
+}
+
+.modern-theme button:hover {
+    background-color: #f7fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.modern-theme button:active {
+    transform: translateY(0);
+}
+
+/* Icon Buttons (Back, etc) */
+.modern-theme .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    /* Fixed width for perfect circles */
+    height: 44px;
+    border-radius: 50%;
+    padding: 0;
+    line-height: 0;
+}
+
+.modern-theme .btn-icon svg {
+    margin: 0;
+    display: block;
+}
+
+/* Inputs and Textareas */
+.modern-theme input,
+.modern-theme textarea {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: #f8f9fa;
+    padding: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: none;
+    /* Remove retro shadow */
+}
+
+.modern-theme input:focus,
+.modern-theme textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+    background: white;
+}
+
+/* Dashboard Cards Overrides */
+.modern-theme .entry-card {
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+}
+
+.modern-theme .entry-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.05);
+    background: white;
+    /* No inversion */
+    color: var(--text-primary);
+    border-color: var(--accent-color);
+}
+
+/* Prevent image inversion since we aren't doing the high contrast look */
+.modern-theme .entry-card:hover img {
+    filter: none !important;
+    opacity: 0.8;
+}
+
+/* Search Input Fix */
+.modern-theme .search-input-wrapper svg {
+    right: 12px !important;
+}
+
+/* Custom Journal Editor Overrides if needed */
+.modern-theme .journal-editor {
+    background: white;
+    border-radius: 16px;
+}
+
+/* Visibility Fixes */
+.modern-theme .btn-new-entry {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+
+.modern-theme .btn-new-entry:hover {
+    background-color: #f7fafc;
+    transform: translateY(-1px);
+    color: #000;
+}
+
+/* Dropdown Menu Fixes */
+.modern-theme .dropdown-menu {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    overflow: hidden;
+    min-width: 150px;
+}
+
+.modern-theme .dropdown-menu button {
+    width: 100%;
+    text-align: left;
+    border: none;
+    box-shadow: none;
+    /* Reset generic button shadow */
+    background: transparent;
+    padding: 10px 12px;
+    /* A bit more padding */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Explicit alignment */
+    gap: 10px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    /* Serif here too */
+}
+
+.modern-theme .dropdown-menu button:hover {
+    background-color: #f0f0f0;
+    /* Grey hover */
+    color: black;
+    transform: none;
+    /* No jump in dropdown */
+}
+
+.modern-theme .dropdown-menu button svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Timeline Header Fix */
+.modern-theme .timeline-header {
+    background: transparent;
+    border: none;
+    /* Remove box */
+    padding: 10px 0;
+    font-family: var(--font-ui);
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+/* Calendar Overrides */
+.modern-theme .pixel-calendar {
+    width: 100%;
+    /* Fit container */
+    max-width: 320px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: var(--font-body);
+    padding: 20px;
+    background: white;
+}
+
+.modern-theme .calendar-header {
+    margin-bottom: 15px;
+}
+
+.modern-theme .month-display {
+    font-family: var(--font-ui);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    /* Clean text */
+}
+
+.modern-theme .days-header {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 10px;
+}
+
+.modern-theme .day-name {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.modern-theme .day-cell {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border-radius: 50%;
+    /* Circle days */
+    border: none;
+    height: 36px;
+    width: 36px;
+    margin: 2px auto;
+    /* Center in grid */
+}
+
+.modern-theme .day-cell:hover:not(.disabled) {
+    background-color: #f0f0f0;
+    border: none;
+    color: black;
+}
+
+.modern-theme .day-cell.selected {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.modern-theme .day-cell.today {
+    text-decoration: none;
+    color: var(--accent-color);
+    font-weight: 700;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+}

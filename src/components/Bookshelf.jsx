@@ -178,7 +178,8 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                     fontSize: '1rem',
                                     opacity: 0.8,
                                     marginTop: '4px',
-                                    fontStyle: 'italic'
+                                    fontStyle: 'italic',
+                                    fontFamily: 'var(--font-body)'
                                 }}>
                                     by {book.author}
                                 </div>

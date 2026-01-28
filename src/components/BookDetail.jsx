@@ -80,7 +80,7 @@ export default function BookDetail({ bookId, onBack }) {
                         {book.title}
                     </h1>
                     <p style={{
-                        fontFamily: 'var(--font-ui)',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '1.1rem',
                         color: 'var(--text-secondary)',
                         margin: '5px 0 0 0'
@@ -181,7 +181,8 @@ export default function BookDetail({ bookId, onBack }) {
                             gap: '10px',
                             padding: '15px 40px',
                             borderRadius: '30px',
-                            background: 'var(--accent-color, #000)'
+                            background: 'var(--accent-color, #000)',
+                            color: '#ffffff'
                         }}
                     >
                         <Save size={20} /> Save Changes
