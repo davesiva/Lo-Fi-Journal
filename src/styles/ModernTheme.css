@@ -156,6 +156,9 @@
     /* No inversion */
     color: var(--text-primary);
     border-color: var(--accent-color);
+    z-index: 10;
+    position: relative;
+    /* Ensure z-index works */
 }
 
 /* Prevent image inversion since we aren't doing the high contrast look */
