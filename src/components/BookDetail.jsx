@@ -72,8 +72,9 @@ export default function BookDetail({ bookId, onBack }) {
                 </button>
                 <div style={{ flex: 1 }}>
                     <h1 style={{
-                        fontFamily: '"Playfair Display", serif',
-                        fontSize: '2rem',
+                        fontFamily: 'var(--font-ui)',
+                        fontSize: '2.5rem',
+                        fontWeight: '400',
                         margin: 0
                     }}>
                         {book.title}

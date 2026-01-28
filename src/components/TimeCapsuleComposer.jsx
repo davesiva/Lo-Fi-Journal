@@ -75,7 +75,7 @@ export default function TimeCapsuleComposer({ onBack }) {
     };
 
     return (
-        <div className="editor-container" style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div className="editor-container" style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
             <header className="editor-header">
                 <button className="btn-icon" onClick={onBack}>
                     <ArrowLeft size={24} />
@@ -133,7 +133,16 @@ export default function TimeCapsuleComposer({ onBack }) {
                             placeholder="Write a message to your future self..."
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
-                            style={{ minHeight: '300px', resize: 'none' }}
+                            style={{
+                                minHeight: '400px',
+                                resize: 'none',
+                                padding: '25px',
+                                fontSize: '1.2rem',
+                                lineHeight: '1.6',
+                                borderRadius: '8px',
+                                border: '2px solid var(--border-color)',
+                                fontFamily: 'var(--font-body)'
+                            }}
                             autoFocus
                         />
                     ) : (
@@ -145,7 +154,7 @@ export default function TimeCapsuleComposer({ onBack }) {
                                     </label>
                                     <textarea
                                         className="journal-textarea"
-                                        style={{ minHeight: '80px', height: '80px', padding: '10px', fontSize: '1rem' }}
+                                        style={{ minHeight: '80px', height: '80px', padding: '10px', fontSize: '1rem', width: '100%' }}
                                         value={answers[question] || ''}
                                         onChange={(e) => setAnswers(prev => ({ ...prev, [question]: e.target.value }))}
                                         placeholder="Your answer..."
