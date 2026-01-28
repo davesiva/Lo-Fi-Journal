@@ -45,7 +45,7 @@ function App() {
     setView('time-capsule');
   }
 
-  const [theme, setTheme] = useState('default'); // 'default' | 'modern'
+  const [theme, setTheme] = useState('modern'); // 'default' | 'modern'
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'default' ? 'modern' : 'default');

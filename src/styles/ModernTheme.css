@@ -51,7 +51,6 @@
 .modern-theme h3 {
     font-family: var(--font-ui);
     font-weight: 600;
-    letter-spacing: -0.02em;
     color: #1a202c;
 }
 
@@ -546,4 +545,5 @@
     transform: none;
     animation: none;
     opacity: 0.2;
+}
 }
