@@ -6,7 +6,7 @@ import BookScanner from './BookScanner';
 import ConfirmModal from './ConfirmModal';
 import './Dashboard.css'; // Reusing dashboard styles for consistency
 
-export default function Bookshelf({ onNavigateHome }) {
+export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
     const [view, setView] = useState('list'); // 'list', 'manual', 'scan'
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -158,13 +158,18 @@ export default function Bookshelf({ onNavigateHome }) {
             ) : (
                 <div className="entries-list">
                     {books.map(book => (
-                        <div key={book.id} className="entry-card" style={{ cursor: 'default' }}>
+                        <div
+                            key={book.id}
+                            className="entry-card"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => onNavigateBook && onNavigateBook(book.id)}
+                        >
                             <div className="entry-content">
                                 <div className="entry-header-row">
                                     <span style={{
-                                        fontFamily: '"Playfair Display", serif',
-                                        fontSize: '1.2rem',
-                                        fontWeight: 'bold'
+                                        fontFamily: 'var(--font-ui)',
+                                        fontSize: '1.4rem',
+                                        fontWeight: 500
                                     }}>
                                         {book.title}
                                     </span>

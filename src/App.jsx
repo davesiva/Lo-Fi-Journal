@@ -6,12 +6,14 @@ import TimeCapsuleComposer from './components/TimeCapsuleComposer';
 import TimeCapsuleViewer from './components/TimeCapsuleViewer';
 import Bookshelf from './components/Bookshelf';
 
+import BookDetail from './components/BookDetail';
 import bookshelfIcon from './assets/bookshelf-icon.png';
 
 function App() {
-  const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf'
+  const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf', 'book-detail'
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedCapsule, setSelectedCapsule] = useState(null);
+  const [selectedBook, setSelectedBook] = useState(null);
 
   const navigateToWrite = (date = null) => {
     setSelectedDate(date);
@@ -22,12 +24,19 @@ function App() {
     setView('dashboard');
     setSelectedDate(null);
     setSelectedCapsule(null);
+    setSelectedBook(null); // Clear selected book on home navigation
   };
 
   const navigateToBookshelf = () => {
     setView('bookshelf');
     setSelectedDate(null);
     setSelectedCapsule(null);
+    setSelectedBook(null);
+  };
+
+  const navigateToBook = (bookId) => {
+    setSelectedBook(bookId);
+    setView('book-detail');
   };
 
   const navigateToCapsule = (capsule = null) => {
@@ -38,7 +47,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header" style={{
-        padding: '30px 20px',
+        padding: '30px 0',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -109,7 +118,11 @@ function App() {
         )}
 
         {view === 'bookshelf' && (
-          <Bookshelf onNavigateHome={navigateHome} />
+          <Bookshelf onNavigateHome={navigateHome} onNavigateBook={navigateToBook} />
+        )}
+
+        {view === 'book-detail' && selectedBook && (
+          <BookDetail bookId={selectedBook} onBack={navigateToBookshelf} />
         )}
 
         {view === 'write' && (
