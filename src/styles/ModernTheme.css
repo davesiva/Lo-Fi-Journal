@@ -508,3 +508,42 @@
         opacity: 0.8;
     }
 }
+
+.modern-theme .btn-modern-pause {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.modern-theme .btn-modern-pause .pause-bars {
+    display: flex;
+    gap: 6px;
+}
+
+.modern-theme .btn-modern-pause .bar {
+    width: 6px;
+    height: 18px;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+}
+
+.modern-theme .audio-waves.paused .wave {
+    animation-play-state: paused;
+    opacity: 0.2;
+    transform: scaleY(0.5);
+}
+
+.modern-theme .audio-waves.paused .wave.paused-line {
+    /* Flat line style */
+    height: 4px !important;
+    transform: none;
+    animation: none;
+    opacity: 0.2;
+}

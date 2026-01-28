@@ -5,7 +5,7 @@ import { Mic, Square, Play, Trash2, Save, ArrowLeft } from 'lucide-react';
 import './VoiceRecorder.css';
 
 export default function VoiceRecorder({ onBack, theme }) {
-    const [state, setState] = useState('idle'); // idle, recording, review
+    const [state, setState] = useState('idle'); // idle, recording, paused, review
     const [audioURL, setAudioURL] = useState(null);
     const [recordingTime, setRecordingTime] = useState(0);
     const mediaRecorderRef = useRef(null);
@@ -17,6 +17,17 @@ export default function VoiceRecorder({ onBack, theme }) {
     }, []);
 
     const startRecording = async () => {
+        if (state === 'paused' && mediaRecorderRef.current) {
+            mediaRecorderRef.current.resume();
+            setState('recording');
+
+            // Resume timer
+            timerRef.current = setInterval(() => {
+                setRecordingTime(prev => prev + 1);
+            }, 1000);
+            return;
+        }
+
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorderRef.current = new MediaRecorder(stream);
@@ -48,8 +59,16 @@ export default function VoiceRecorder({ onBack, theme }) {
         }
     };
 
-    const stopRecording = () => {
+    const pauseRecording = () => {
         if (mediaRecorderRef.current && state === 'recording') {
+            mediaRecorderRef.current.pause();
+            setState('paused');
+            clearInterval(timerRef.current);
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && (state === 'recording' || state === 'paused')) {
             mediaRecorderRef.current.stop();
             // Stop all tracks
             mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
@@ -61,6 +80,7 @@ export default function VoiceRecorder({ onBack, theme }) {
         setAudioURL(null);
         setState('idle');
         setRecordingTime(0);
+        clearInterval(timerRef.current); // Ensure timer is cleared
     };
 
     const saveRecording = async () => {
@@ -126,6 +146,16 @@ export default function VoiceRecorder({ onBack, theme }) {
                         </div>
                     )}
 
+                    {state === 'paused' && (
+                        <div className="audio-waves paused">
+                            <div className="wave paused-line"></div>
+                            <div className="wave paused-line"></div>
+                            <div className="wave paused-line"></div>
+                            <div className="wave paused-line"></div>
+                            <div className="wave paused-line"></div>
+                        </div>
+                    )}
+
                     <div className="modern-controls">
                         {state === 'idle' && (
                             <button className="btn-modern-record" onClick={startRecording}>
@@ -133,10 +163,25 @@ export default function VoiceRecorder({ onBack, theme }) {
                             </button>
                         )}
 
-                        {state === 'recording' && (
-                            <button className="btn-modern-stop" onClick={stopRecording}>
-                                <Square size={24} fill="currentColor" />
-                            </button>
+                        {(state === 'recording' || state === 'paused') && (
+                            <>
+                                {state === 'paused' ? (
+                                    <button className="btn-modern-record" onClick={startRecording} title="Resume">
+                                        <div className="record-dot"></div>
+                                    </button>
+                                ) : (
+                                    <button className="btn-modern-pause" onClick={pauseRecording} title="Pause">
+                                        <div className="pause-bars">
+                                            <div className="bar"></div>
+                                            <div className="bar"></div>
+                                        </div>
+                                    </button>
+                                )}
+
+                                <button className="btn-modern-stop" onClick={stopRecording} title="Finish">
+                                    <Square size={24} fill="currentColor" />
+                                </button>
+                            </>
                         )}
 
                         {state === 'review' && (
@@ -155,7 +200,8 @@ export default function VoiceRecorder({ onBack, theme }) {
                     </div>
                     <p className="modern-instruction">
                         {state === 'idle' ? 'Tap to record' :
-                            state === 'recording' ? 'Recording...' : 'Review'}
+                            state === 'recording' ? 'Recording...' :
+                                state === 'paused' ? 'Paused' : ''}
                     </p>
                 </div>
             ) : (
@@ -169,7 +215,11 @@ export default function VoiceRecorder({ onBack, theme }) {
                             </div>
                         </div>
                         <div className="time-display">{formatTime(recordingTime)}</div>
-                        {state === 'recording' && <div className="rec-indicator">REC</div>}
+                        {(state === 'recording' || state === 'paused') && (
+                            <div className="rec-indicator" style={{ opacity: state === 'paused' ? 0.5 : 1 }}>
+                                {state === 'paused' ? 'PAUSED' : 'REC'}
+                            </div>
+                        )}
                     </div>
 
                     <div className="controls">
@@ -179,10 +229,35 @@ export default function VoiceRecorder({ onBack, theme }) {
                             </button>
                         )}
 
-                        {state === 'recording' && (
-                            <button className="btn-stop" onClick={stopRecording}>
-                                <Square size={32} fill="currentColor" />
-                            </button>
+                        {(state === 'recording' || state === 'paused') && (
+                            <div style={{ display: 'flex', gap: '20px' }}>
+                                {state === 'paused' ? (
+                                    <button className="btn-record" onClick={startRecording} title="Resume">
+                                        <Mic size={32} />
+                                    </button>
+                                ) : (
+                                    <button className="btn-pause" onClick={pauseRecording} style={{
+                                        width: '64px',
+                                        height: '64px',
+                                        borderRadius: '50%',
+                                        background: '#ddd',
+                                        border: '4px solid #bbb',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
+                                    }}>
+                                        <div style={{ display: 'flex', gap: '5px' }}>
+                                            <div style={{ width: '6px', height: '20px', background: '#555' }}></div>
+                                            <div style={{ width: '6px', height: '20px', background: '#555' }}></div>
+                                        </div>
+                                    </button>
+                                )}
+                                <button className="btn-stop" onClick={stopRecording}>
+                                    <Square size={32} fill="currentColor" />
+                                </button>
+                            </div>
                         )}
 
                         {state === 'review' && (
@@ -203,7 +278,7 @@ export default function VoiceRecorder({ onBack, theme }) {
                     <p className="instruction-text">
                         {state === 'idle' ? 'Tap mic to record.' :
                             state === 'recording' ? 'Recording...' :
-                                'Review your tape.'}
+                                state === 'paused' ? 'Paused.' : ''}
                     </p>
                 </>
             )}
