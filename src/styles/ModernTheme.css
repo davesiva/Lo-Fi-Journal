@@ -397,9 +397,11 @@
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         margin-right: -20px;
-        /* Compensate for container padding if needed, but let's see */
+        /* Compensate for container padding */
         padding-right: 20px;
         /* Ensure last item is reachable */
+        gap: 8px;
+        /* Tighter gap (was 15px) */
     }
 
     .modern-theme .filter-toggles::-webkit-scrollbar {
@@ -409,6 +411,10 @@
     .modern-theme .filter-btn {
         flex-shrink: 0;
         white-space: nowrap;
+        padding: 6px 10px;
+        /* Slightly tighter padding */
+        font-size: 0.85rem;
+        /* Slightly smaller text */
     }
 }
 
