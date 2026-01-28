@@ -64,7 +64,7 @@ function App() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <h1
-              style={{ fontSize: '2.5rem', cursor: 'pointer', margin: 0 }}
+              className="app-logo"
               onClick={navigateHome}
             >
               ttyl

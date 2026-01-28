@@ -338,6 +338,80 @@
     animation: fadeIn 0.5s ease;
 }
 
+
+/* Typography Helper Classes (Preserving original weights) */
+.modern-theme .app-logo {
+    font-size: 2.5rem;
+    cursor: pointer;
+    margin: 0;
+    /* h1 defaults apply for font-family */
+}
+
+.modern-theme .page-title {
+    font-size: 2rem;
+    /* Match section-title size */
+    font-family: var(--font-ui);
+    font-weight: 600;
+    /* Match section-title/h2 weight */
+    margin: 0;
+}
+
+/* Mobile Fixes & Typography Overrides */
+@media (max-width: 768px) {
+    .modern-theme .app-container {
+        margin-top: 0;
+        margin-bottom: 0;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px;
+        min-height: 100vh;
+        box-shadow: none;
+    }
+
+    .modern-theme {
+        background-color: white;
+    }
+
+    .modern-theme .app-logo {
+        font-size: 2rem;
+        /* Reduced for mobile */
+    }
+
+    .modern-theme .page-title {
+        font-size: 2rem;
+        /* Reduced for mobile */
+    }
+
+    .modern-theme .modern-time-display {
+        font-size: 2.5rem;
+        /* Reduced for mobile */
+    }
+
+    /* Scrollable Filters on Mobile */
+    .modern-theme .filter-toggles {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
+        /* Touch target breathing room */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-right: -20px;
+        /* Compensate for container padding if needed, but let's see */
+        padding-right: 20px;
+        /* Ensure last item is reachable */
+    }
+
+    .modern-theme .filter-toggles::-webkit-scrollbar {
+        display: none;
+    }
+
+    .modern-theme .filter-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+}
+
 .modern-theme .modern-time-display {
     font-family: var(--font-ui);
     font-size: 3.5rem;

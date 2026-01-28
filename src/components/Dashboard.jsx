@@ -276,7 +276,7 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-ui)', fontWeight: 400 }}>Past Entries</h2>
+                <h2 className="page-title">Past Entries</h2>
                 <div style={{ position: 'relative' }}>
                     <button
                         className="btn-new-entry"
