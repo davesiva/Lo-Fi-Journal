@@ -157,41 +157,32 @@
 }
 
 /* Mobile Optimizations for Editor Buttons */
+/* Mobile Optimizations for Editor Buttons */
 @media (max-width: 600px) {
-    .btn-text {
-        display: none;
-    }
 
+    /* Allow text to show, but scale it down slightly to fit */
+    .btn-action,
     .btn-back,
     .btn-delete {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        border: 1px solid var(--border-color);
+        padding: 0 12px;
+        /* Tighter padding */
+        font-size: 0.8rem;
+        /* Smaller text */
+        height: 36px;
+        /* Slightly shorter */
+        gap: 6px;
     }
 
-    .btn-back {
-        background: white;
-        /* Make it pop a bit like a touch target */
+    /* Override the specific display: inline-block if needed, though we want it shown now */
+    .btn-text {
+        display: inline-block;
     }
 
-    .btn-delete {
-        color: #e53935;
-        /* Always show red tint on mobile for safety/visibility if icon only */
-    }
-
-    .btn-action {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--border-color);
-        border-radius: 50%;
-        /* Match shape */
+    /* Ensure icon sizes match text scale if needed */
+    .btn-back svg,
+    .btn-delete svg {
+        width: 16px;
+        height: 16px;
     }
 }
 
