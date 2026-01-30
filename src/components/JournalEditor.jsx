@@ -171,9 +171,6 @@ export default function JournalEditor({ initialDate, onBack }) {
                     <span className="btn-text">Back to Dashboard</span>
                 </button>
                 <div className="editor-actions">
-                    <button className="btn-action" onClick={handleSummarize} title="Auto-Summarize">
-                        <Sparkles size={18} />
-                    </button>
                     <button className="btn-delete" onClick={handleDeleteClick} title="Delete Entry">
                         <Trash2 size={18} />
                         <span className="btn-text">Delete Entry</span>

@@ -18,69 +18,110 @@
     align-items: center;
 }
 
-.btn-action {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: color 0.2s;
+/* Button Actions (Desktop) */
+.btn-action,
+.btn-back,
+.btn-delete {
     display: flex;
     align-items: center;
-}
-
-.btn-action:hover {
-    color: var(--text-primary);
-}
-
-.btn-back {
-    background: none;
-    border: none;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px;
+    /* Use height for vertical padding */
+    border-radius: 9999px;
+    /* Pill shape */
+    border: 1px solid var(--border-color);
+    background: white;
     font-family: var(--font-ui);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1;
+    /* Tight line height */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 42px;
+    /* Fixed height */
     color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0;
+    text-decoration: none !important;
+    /* ensure no underline ever */
 }
 
+/* Optical alignment fix: Move text up slightly to match icon center */
+/* Optical alignment fix: Move text up slightly to match icon center */
+.btn-action .btn-text,
+.btn-back .btn-text,
+.btn-delete .btn-text {
+    position: relative;
+    top: -5px;
+    /* Even stronger lift (-5px) */
+    display: inline-block;
+    text-decoration: none !important;
+    /* Force no underline on the text itself */
+    border-bottom: none !important;
+    /* Just in case it's a border */
+}
+
+/* Ensure spans inside don't get underlined on hover */
+.btn-back:hover .btn-text,
+.btn-delete:hover .btn-text {
+    text-decoration: none !important;
+}
+
+
+.btn-back:hover,
+.btn-action:hover {
+    background-color: #f7fafc;
+    color: var(--text-primary);
+    text-decoration: none !important;
+    /* Force no underline */
+    border-color: #b0b0b0;
+}
+
+/* Delete Specifics */
 .btn-delete {
-    background: none;
-    border: none;
-    font-family: var(--font-ui);
-    font-size: 1rem;
-    color: #999;
-    /* Subtle warning */
-    cursor: pointer;
-    padding: 0;
-    transition: color 0.2s;
+    color: var(--text-secondary);
 }
 
 .btn-delete:hover {
+    background-color: #fff5f5;
     color: #e53935;
-    /* Red on hover */
-    text-decoration: underline;
+    border-color: #e53935;
+    text-decoration: none !important;
+    /* No underline */
 }
 
-.btn-back:hover {
-    text-decoration: underline;
-}
-
-.journal-meta {
+/* Reset specific overrides that might conflict */
+.editor-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* DATE HEADER & META */
+.journal-meta {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: baseline !important;
+    /* Align text baselines */
+    width: 100%;
     margin-bottom: 25px;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 15px;
+    padding-bottom: 10px;
+    /* Reduced padding slightly */
 }
 
 .date-display {
     font-family: var(--font-ui);
     font-size: 2rem;
-    /* Match Dashboard matching size */
     font-weight: 600;
-    /* Match Dashboard weight */
     color: var(--text-primary);
     margin: 0;
+    line-height: 1.2;
 }
 
 .save-status {
