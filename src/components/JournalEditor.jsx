@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { get, set, del } from 'idb-keyval';
 import { generateSummary } from '../services/ai';
 import ConfirmModal from './ConfirmModal';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ChevronLeft, Trash2 } from 'lucide-react';
 import './JournalEditor.css';
 
 export default function JournalEditor({ initialDate, onBack }) {
@@ -166,12 +166,18 @@ export default function JournalEditor({ initialDate, onBack }) {
     return (
         <div className="journal-container">
             <div className="editor-nav">
-                <button className="btn-back" onClick={handleBackClick}>&lt; Back to Dashboard</button>
+                <button className="btn-back" onClick={handleBackClick}>
+                    <ChevronLeft size={20} />
+                    <span className="btn-text">Back to Dashboard</span>
+                </button>
                 <div className="editor-actions">
                     <button className="btn-action" onClick={handleSummarize} title="Auto-Summarize">
                         <Sparkles size={18} />
                     </button>
-                    <button className="btn-delete" onClick={handleDeleteClick}>Delete Entry</button>
+                    <button className="btn-delete" onClick={handleDeleteClick} title="Delete Entry">
+                        <Trash2 size={18} />
+                        <span className="btn-text">Delete Entry</span>
+                    </button>
                 </div>
             </div>
 
