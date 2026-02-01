@@ -19,8 +19,8 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
     const [selectionMode, setSelectionMode] = useState(false);
     const [selectedBooks, setSelectedBooks] = useState([]);
 
-    // Modals & Forms
     const [showAddMenu, setShowAddMenu] = useState(false);
+    const [showSortMenu, setShowSortMenu] = useState(false);
     const [bookToDelete, setBookToDelete] = useState(null);
     const [showFolderModal, setShowFolderModal] = useState(false);
     const [newFolderName, setNewFolderName] = useState('');
@@ -30,8 +30,10 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
     useEffect(() => {
         loadLibrary();
 
-        const handleClickOutside = () => setShowAddMenu(false);
-        document.addEventListener('click', handleClickOutside);
+        const handleClickOutside = (event) => {
+            setShowAddMenu(false);
+            setShowSortMenu(false); // Close sort menu too
+        }; document.addEventListener('click', handleClickOutside);
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
@@ -227,37 +229,50 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '6px',
+                                        justifyContent: 'center',
                                         fontFamily: 'var(--font-ui)',
                                         fontSize: '0.9rem'
                                     }}
-                                    title="Auto-Organize with AI"
+                                    title={isAISorting ? 'AI Sorting...' : 'Auto-Organize with AI'}
                                 >
                                     <Sparkles size={16} className={isAISorting ? "spinning-icon" : ""} />
-                                    <span>{isAISorting ? 'AI Sorting...' : 'AI Sort'}</span>
                                 </button>
 
-                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                                    <select
-                                        value={sortMethod}
-                                        onChange={(e) => setSortMethod(e.target.value)}
+                                <div style={{ position: 'relative' }}>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); setShowSortMenu(!showSortMenu); setShowAddMenu(false); }}
                                         style={{
-                                            appearance: 'none',
-                                            padding: '8px 32px 8px 16px',
-                                            borderRadius: '20px',
+                                            background: 'none',
                                             border: '1px solid var(--border-color)',
+                                            borderRadius: '20px',
+                                            padding: '8px 32px 8px 16px',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
                                             fontFamily: 'var(--font-ui)',
                                             fontSize: '0.9rem',
-                                            background: 'transparent',
-                                            cursor: 'pointer',
-                                            minWidth: '100px'
+                                            minWidth: '100px',
+                                            position: 'relative',
+                                            whiteSpace: 'nowrap'
                                         }}
                                     >
-                                        <option value="recent">Recent</option>
-                                        <option value="title">Title</option>
-                                        <option value="author">Author</option>
-                                    </select>
-                                    <ChevronDown size={14} style={{ position: 'absolute', right: '12px', pointerEvents: 'none', opacity: 0.6 }} />
+                                        {sortMethod.charAt(0).toUpperCase() + sortMethod.slice(1)}
+                                        <ChevronDown size={14} style={{ position: 'absolute', right: '12px', opacity: 0.6 }} />
+                                    </button>
+
+                                    {showSortMenu && (
+                                        <div className="dropdown-menu" style={{ right: 0, top: '120%', minWidth: '120px' }}>
+                                            <button onClick={() => { setSortMethod('recent'); setShowSortMenu(false); }}>
+                                                Recent
+                                            </button>
+                                            <button onClick={() => { setSortMethod('title'); setShowSortMenu(false); }}>
+                                                Title
+                                            </button>
+                                            <button onClick={() => { setSortMethod('author'); setShowSortMenu(false); }}>
+                                                Author
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
