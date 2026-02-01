@@ -5,7 +5,7 @@ import ConfirmModal from './ConfirmModal';
 import { Sparkles, ChevronLeft, Trash2 } from 'lucide-react';
 import './JournalEditor.css';
 
-export default function JournalEditor({ initialDate, onBack }) {
+export default function JournalEditor({ initialDate, initialContent, onBack }) {
     const [content, setContent] = useState('');
     const [status, setStatus] = useState('loading'); // loading, saved, saving
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -46,7 +46,8 @@ export default function JournalEditor({ initialDate, onBack }) {
             } else if (saved) {
                 setContent(saved); // Legacy string support
             } else {
-                setContent('');
+                // No saved entry, check for initial content (e.g. prompt)
+                setContent(initialContent || '');
             }
             setStatus('saved');
         } catch (err) {

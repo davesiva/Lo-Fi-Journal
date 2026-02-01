@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { keys, get, del, set } from 'idb-keyval';
-import { MoreVertical, Trash2, Edit2, Play, Mic, Lock, Search } from 'lucide-react';
+import { MoreVertical, Trash2, Edit2, Play, Mic, Lock, Search, Sparkles } from 'lucide-react';
+import { getDailyPrompts } from '../utils/aiPrompts';
 import ConfirmModal from './ConfirmModal';
 import './Dashboard.css';
 
 export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsule }) {
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [dailyPrompts, setDailyPrompts] = useState(null);
     const [activeMenu, setActiveMenu] = useState(null); // Key of entry with open menu
     const [editingKey, setEditingKey] = useState(null); // Key of entry being edited
     const [editValue, setEditValue] = useState(''); // Text content being edited
@@ -17,7 +19,7 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
 
     useEffect(() => {
         loadEntries();
-        // Close menu on click outside
+        loadPrompts();
         // Close menu on click outside
         const handleClickOutside = () => {
             setActiveMenu(null);
@@ -26,6 +28,11 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
         document.addEventListener('click', handleClickOutside);
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
+
+    const loadPrompts = async () => {
+        const prompts = await getDailyPrompts();
+        setDailyPrompts(prompts);
+    };
 
     const loadEntries = async () => {
         try {
@@ -306,6 +313,68 @@ export default function Dashboard({ onNavigate, onNavigateVoice, onNavigateCapsu
                     )}
                 </div>
             </div>
+
+            {/* Daily Whimsy Section */}
+            {dailyPrompts && (
+                <div style={{ marginBottom: '40px' }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '15px',
+                        fontFamily: 'var(--font-ui)',
+                        color: 'var(--text-secondary)',
+                        fontSize: '0.9rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px'
+                    }}>
+                        <Sparkles size={16} /> Daily Whimsy
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <div
+                            className="prompt-card"
+                            onClick={() => onNavigate(null, `**${dailyPrompts.option1 || dailyPrompts.grounded}**\n\n`)}
+                            style={{
+                                padding: '20px',
+                                border: '2px dashed var(--border-color)',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                background: 'rgba(0,0,0,0.02)'
+                            }}
+                        >
+                            <div style={{
+                                fontFamily: 'var(--font-body)',
+                                fontSize: '1.1rem',
+                                lineHeight: '1.4'
+                            }}>
+                                {dailyPrompts.option1 || dailyPrompts.grounded}
+                            </div>
+                        </div>
+
+                        <div
+                            className="prompt-card"
+                            onClick={() => onNavigate(null, `**${dailyPrompts.option2 || dailyPrompts.wildcard}**\n\n`)}
+                            style={{
+                                padding: '20px',
+                                border: '2px dashed var(--border-color)',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                background: 'rgba(0,0,0,0.02)'
+                            }}
+                        >
+                            <div style={{
+                                fontFamily: 'var(--font-body)',
+                                fontSize: '1.1rem',
+                                lineHeight: '1.4'
+                            }}>
+                                {dailyPrompts.option2 || dailyPrompts.wildcard}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="search-filter-container">
                 <div className="search-input-wrapper">

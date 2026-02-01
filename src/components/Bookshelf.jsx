@@ -237,21 +237,47 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                     <span>{isAISorting ? 'AI Sorting...' : 'AI Sort'}</span>
                                 </button>
 
-                                <select
-                                    value={sortMethod}
-                                    onChange={(e) => setSortMethod(e.target.value)}
-                                    style={{ padding: '5px 10px', borderRadius: '8px', border: '1px solid var(--border-color)', fontFamily: 'var(--font-ui)', background: 'transparent' }}
-                                >
-                                    <option value="recent">Recent</option>
-                                    <option value="title">Title</option>
-                                    <option value="author">Author</option>
-                                </select>
+                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                    <select
+                                        value={sortMethod}
+                                        onChange={(e) => setSortMethod(e.target.value)}
+                                        style={{
+                                            appearance: 'none',
+                                            padding: '8px 32px 8px 16px',
+                                            borderRadius: '20px',
+                                            border: '1px solid var(--border-color)',
+                                            fontFamily: 'var(--font-ui)',
+                                            fontSize: '0.9rem',
+                                            background: 'transparent',
+                                            cursor: 'pointer',
+                                            minWidth: '100px'
+                                        }}
+                                    >
+                                        <option value="recent">Recent</option>
+                                        <option value="title">Title</option>
+                                        <option value="author">Author</option>
+                                    </select>
+                                    <ChevronDown size={14} style={{ position: 'absolute', right: '12px', pointerEvents: 'none', opacity: 0.6 }} />
+                                </div>
 
                                 <button
-                                    className="btn-new-entry"
                                     onClick={(e) => { e.stopPropagation(); setShowAddMenu(!showAddMenu); }}
+                                    style={{
+                                        background: 'var(--text-primary)',
+                                        color: 'var(--bg-primary)',
+                                        border: '1px solid var(--text-primary)',
+                                        borderRadius: '20px',
+                                        padding: '8px 16px',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        fontFamily: 'var(--font-ui)',
+                                        fontSize: '0.9rem',
+                                        whiteSpace: 'nowrap'
+                                    }}
                                 >
-                                    <Plus size={18} /> Add
+                                    <Plus size={16} /> Add
                                 </button>
                             </div>
 

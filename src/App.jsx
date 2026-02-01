@@ -13,17 +13,20 @@ import './styles/ModernTheme.css';
 function App() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf', 'book-detail'
   const [selectedDate, setSelectedDate] = useState(null);
+  const [initialEditorContent, setInitialEditorContent] = useState('');
   const [selectedCapsule, setSelectedCapsule] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
 
-  const navigateToWrite = (date = null) => {
+  const navigateToWrite = (date = null, content = '') => {
     setSelectedDate(date);
+    setInitialEditorContent(content);
     setView('write');
   };
 
   const navigateHome = () => {
     setView('dashboard');
     setSelectedDate(null);
+    setInitialEditorContent('');
     setSelectedCapsule(null);
     setSelectedBook(null); // Clear selected book on home navigation
   };
@@ -151,6 +154,7 @@ function App() {
           {view === 'write' && (
             <JournalEditor
               initialDate={selectedDate}
+              initialContent={initialEditorContent}
               onBack={navigateHome}
             />
           )}
