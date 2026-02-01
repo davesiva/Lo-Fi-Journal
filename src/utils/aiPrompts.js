@@ -25,7 +25,7 @@ export const getDailyPrompts = async () => {
         console.log("Fetching new daily journal prompts...");
         const systemPrompt = `Generate 2 distinct 'Grounded' journal prompts for today. 
 Both should be simple, check-in style, or gratitude-focused. Avoid random/wildcard hypothetical questions.
-Keep them under 20 words. Tone: warm, vintage, lo-fi, relaxed. Use perfect grammar (e.g., "What's one..." instead of "What one...").
+Keep them under 20 words. Tone: warm, vintage, lo-fi, relaxed.
 Output strictly as a JSON object with keys 'option1' and 'option2'. Do not include markdown formatting like \`\`\`json.`;
 
         const response = await fetch('/api/generate', {
