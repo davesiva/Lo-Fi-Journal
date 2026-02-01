@@ -217,7 +217,7 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                     {!selectionMode && (
                         <div style={{ position: 'relative' }}>
                             {/* SORT & ADD Controls */}
-                            <div style={{ display: 'flex', gap: '8px' }}>
+                            <div style={{ display: 'flex', gap: '6px' }}>
                                 <button
                                     onClick={handleAISort}
                                     disabled={isAISorting}
@@ -245,19 +245,19 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                             background: 'none',
                                             border: '1px solid var(--border-color)',
                                             borderRadius: '20px',
-                                            padding: '8px 32px 8px 16px',
+                                            padding: '8px 26px 8px 12px',
                                             cursor: 'pointer',
                                             display: 'flex',
                                             alignItems: 'center',
                                             fontFamily: 'var(--font-ui)',
                                             fontSize: '0.9rem',
-                                            minWidth: '100px',
+                                            minWidth: '90px',
                                             position: 'relative',
                                             whiteSpace: 'nowrap'
                                         }}
                                     >
                                         {sortMethod.charAt(0).toUpperCase() + sortMethod.slice(1)}
-                                        <ChevronDown size={14} style={{ position: 'absolute', right: '12px', opacity: 0.6 }} />
+                                        <ChevronDown size={14} style={{ position: 'absolute', right: '8px', opacity: 0.6 }} />
                                     </button>
 
                                     {showSortMenu && (
@@ -282,11 +282,11 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                         color: 'var(--bg-primary)',
                                         border: '1px solid var(--text-primary)',
                                         borderRadius: '20px',
-                                        padding: '8px 16px',
+                                        padding: '8px 14px',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '6px',
+                                        gap: '4px',
                                         fontFamily: 'var(--font-ui)',
                                         fontSize: '0.9rem',
                                         whiteSpace: 'nowrap'
