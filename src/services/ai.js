@@ -60,3 +60,12 @@ export const generateAudioTitle = async (audioBlob) => {
         }
     });
 };
+
+export const suggestBookCategory = async (title, author) => {
+    if (!title) return null;
+
+    const prompt = `Categorize the book '${title}' by '${author || 'unknown'}' into a single short genre (e.g., Fiction, Sci-Fi, History, Self-Help, Business, Biography). 
+    Return ONLY the genre name. Do not explain. Check if it fits common genres first.`;
+
+    return await callBackendAPI({ prompt });
+};

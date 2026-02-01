@@ -11,6 +11,11 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
     const [finishedDate, setFinishedDate] = useState('');
     const [showCalendar, setShowCalendar] = useState(false);
 
+    // New Fields
+    const [reflections, setReflections] = useState('');
+    const [takeaways, setTakeaways] = useState([]);
+    const [newTakeaway, setNewTakeaway] = useState('');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!title.trim() || !author.trim()) return;
@@ -21,8 +26,11 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
             author,
             startedDate,
             finishedDate,
+            notes: reflections,
+            takeaways,
             createdAt: new Date().toISOString(),
-            type: 'book'
+            type: 'book',
+            folderId: null // Initialize as null
         };
 
         try {
@@ -34,6 +42,17 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
         }
     };
 
+    const addTakeaway = (e) => {
+        e.preventDefault();
+        if (!newTakeaway.trim()) return;
+        setTakeaways([...takeaways, { id: Date.now(), text: newTakeaway.trim() }]);
+        setNewTakeaway('');
+    };
+
+    const removeTakeaway = (id) => {
+        setTakeaways(takeaways.filter(t => t.id !== id));
+    };
+
     return (
         <div className="editor-container">
             <div className="editor-header">
@@ -41,7 +60,7 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
                     <ArrowLeft size={24} />
                 </button>
                 <h2 style={{ flex: 1, textAlign: 'center', margin: 0 }}>Add Book</h2>
-                <div style={{ width: 24 }}></div> {/* Spacer */}
+                <div style={{ width: 24 }}></div>
             </div>
 
             <form onSubmit={handleSubmit} style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
@@ -136,13 +155,93 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
                                 value={finishedDate}
                                 onChange={(date) => {
                                     setFinishedDate(date);
-                                    setStartedDate(date); // Sync for now
+                                    setStartedDate(date);
                                     setShowCalendar(false);
                                 }}
                                 onClose={() => setShowCalendar(false)}
                             />
                         </div>
                     )}
+                </div>
+
+                {/* Reflections Section */}
+                <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Quick Reflections</label>
+                    <textarea
+                        value={reflections}
+                        onChange={(e) => setReflections(e.target.value)}
+                        placeholder="Thoughts, feelings, immediate reactions..."
+                        style={{
+                            width: '100%',
+                            minHeight: '120px',
+                            padding: '15px',
+                            fontSize: '1rem',
+                            lineHeight: '1.5',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            background: '#fff',
+                            resize: 'vertical',
+                            fontFamily: 'var(--font-body)'
+                        }}
+                    />
+                </div>
+
+                {/* Key Takeaways Section */}
+                <div style={{ marginBottom: '30px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Key Takeaways</label>
+
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                        <input
+                            type="text"
+                            value={newTakeaway}
+                            onChange={(e) => setNewTakeaway(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && addTakeaway(e)}
+                            placeholder="Add a key point..."
+                            style={{
+                                flex: 1,
+                                padding: '12px',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '8px',
+                                fontSize: '1rem'
+                            }}
+                        />
+                        <button
+                            type="button"
+                            onClick={addTakeaway}
+                            style={{
+                                padding: '0 15px',
+                                background: 'var(--bg-secondary)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '8px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            +
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {takeaways.map(t => (
+                            <div key={t.id} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                padding: '10px',
+                                background: '#f5f5f5',
+                                borderRadius: '6px',
+                                fontSize: '0.95rem'
+                            }}>
+                                <span style={{ flex: 1 }}>{t.text}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => removeTakeaway(t.id)}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6 }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <button
@@ -159,7 +258,8 @@ export default function ManualBookEntry({ onSave, onCancel, initialData }) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '10px'
+                        gap: '10px',
+                        marginBottom: '40px'
                     }}
                 >
                     <Save size={20} />
