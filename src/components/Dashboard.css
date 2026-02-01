@@ -76,12 +76,15 @@
     border: 1px solid transparent;
 }
 
-.filter-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--text-primary);
+@media (hover: hover) {
+    .filter-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-primary);
+    }
 }
 
-.filter-btn.active {
+.filter-btn.active,
+.filter-btn.active:hover {
     background: var(--text-primary);
     color: var(--bg-primary);
     font-weight: 500;
