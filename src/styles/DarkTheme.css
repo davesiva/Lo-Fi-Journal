@@ -178,6 +178,12 @@
     border-color: #666 !important;
 }
 
+
+/* Search Input Fix */
+.minimal-theme .search-input-wrapper svg {
+    right: 12px !important;
+}
+
 /* Theme Dropdown */
 .minimal-theme .theme-dropdown-btn {
     background-color: var(--card-bg) !important;
