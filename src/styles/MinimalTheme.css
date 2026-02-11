@@ -219,7 +219,8 @@
     width: 6px;
 }
 
-background: #000;
+.minimal-theme ::-webkit-scrollbar-track {
+    background: #000;
 }
 
 .minimal-theme ::-webkit-scrollbar-thumb {
