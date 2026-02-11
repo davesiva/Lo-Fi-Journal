@@ -9,7 +9,8 @@ import Bookshelf from './components/Bookshelf';
 import BookDetail from './components/BookDetail';
 import bookshelfIcon from './assets/bookshelf-icon.png';
 import './styles/ModernTheme.css';
-import './styles/MinimalTheme.css';
+import './styles/ModernTheme.css';
+import './styles/DarkTheme.css';
 
 import { ChevronDown } from 'lucide-react';
 
@@ -79,6 +80,10 @@ function App() {
   const getThemeClass = () => {
     if (theme === 'modern') return 'modern-theme';
     // Minimal theme is Design 2 (Dark Mode Only)
+    // We keep the state key as 'minimal' to avoid breaking existing users/localStorage, 
+    // but we map it to 'dark-theme' class for clarity or keep 'minimal-theme' if CSS uses that.
+    // Let's stick to 'minimal-theme' class in CSS to avoid massive refactor, 
+    // but we just renamed the FILE. The CLASS inside the file is still .minimal-theme.
     if (theme === 'minimal') return 'minimal-theme';
     return '';
   };
