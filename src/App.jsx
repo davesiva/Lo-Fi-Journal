@@ -12,7 +12,7 @@ import './styles/ModernTheme.css';
 import './styles/ModernTheme.css';
 import './styles/DarkTheme.css';
 
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Moon, Sun } from 'lucide-react';
 
 function App() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf', 'book-detail'
@@ -88,11 +88,8 @@ function App() {
     return '';
   };
 
-  const getThemeLabel = () => {
-    if (theme === 'modern') return 'Light';
-    if (theme === 'minimal') return 'Dark';
-    return 'Classic';
-  }
+  // Removed getThemeLabel as it's no longer needed for the toggle
+
 
   return (
     <div className={getThemeClass()} style={{ minHeight: '100vh' }}>
@@ -124,70 +121,19 @@ function App() {
           </div>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
 
-            {/* Theme Dropdown */}
-            <div style={{ position: 'relative' }} ref={themeMenuRef}>
-              <button
-                className="theme-dropdown-btn"
-                onClick={() => setThemeMenuOpen(!themeMenuOpen)}
-                style={{
-                  background: 'none',
-                  border: '1px solid var(--border-color)',
-                  padding: '5px 10px',
-                  fontSize: '0.8rem',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-ui)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  borderRadius: '6px'
-                }}
-              >
-                {getThemeLabel()} <ChevronDown size={14} />
-              </button>
-
-              {themeMenuOpen && (
-                <div className="dropdown-menu" style={{
-                  position: 'absolute',
-                  top: '120%',
-                  right: 0,
-                  zIndex: 100,
-                  minWidth: '140px',
-                  border: '1px solid var(--border-color)',
-                  background: 'var(--bg-primary)',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                }}>
-                  {/* Classic theme hidden for now
-                  <button
-                    onClick={() => { setTheme('default'); setThemeMenuOpen(false); }}
-                    style={{
-                      fontWeight: theme === 'default' ? 'bold' : 'normal',
-                      backgroundColor: theme === 'default' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
-                    }}
-                  >
-                    Classic
-                  </button>
-                  */}
-                  <button
-                    onClick={() => { setTheme('modern'); setThemeMenuOpen(false); }}
-                    style={{
-                      fontWeight: theme === 'modern' ? 'bold' : 'normal',
-                      backgroundColor: theme === 'modern' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
-                    }}
-                  >
-                    Light
-                  </button>
-                  <button
-                    onClick={() => { setTheme('minimal'); setThemeMenuOpen(false); }}
-                    style={{
-                      fontWeight: theme === 'minimal' ? 'bold' : 'normal',
-                      backgroundColor: theme === 'minimal' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
-                    }}
-                  >
-                    Dark
-                  </button>
-                </div>
-              )}
+            {/* Theme Toggle Switch */}
+            <div
+              className="theme-toggle-wrapper"
+              onClick={() => setTheme(theme === 'modern' ? 'minimal' : 'modern')}
+              title={theme === 'modern' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            >
+              <div className="theme-toggle-switch"></div>
+              <div className="theme-toggle-icon sun">
+                <Sun size={16} />
+              </div>
+              <div className="theme-toggle-icon moon">
+                <Moon size={16} />
+              </div>
             </div>
 
             <button
