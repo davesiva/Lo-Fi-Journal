@@ -89,7 +89,7 @@ function App() {
   };
 
   const getThemeLabel = () => {
-    if (theme === 'modern') return 'Modern';
+    if (theme === 'modern') return 'Light';
     if (theme === 'minimal') return 'Dark';
     return 'Classic';
   }
@@ -157,6 +157,7 @@ function App() {
                   borderRadius: '8px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}>
+                  {/* Classic theme hidden for now
                   <button
                     onClick={() => { setTheme('default'); setThemeMenuOpen(false); }}
                     style={{
@@ -166,6 +167,7 @@ function App() {
                   >
                     Classic
                   </button>
+                  */}
                   <button
                     onClick={() => { setTheme('modern'); setThemeMenuOpen(false); }}
                     style={{
@@ -173,7 +175,7 @@ function App() {
                       backgroundColor: theme === 'modern' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
                     }}
                   >
-                    Modern
+                    Light
                   </button>
                   <button
                     onClick={() => { setTheme('minimal'); setThemeMenuOpen(false); }}
