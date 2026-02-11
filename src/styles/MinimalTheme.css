@@ -1,0 +1,440 @@
+/* Minimal Theme (Dark Mode - Design 2) */
+
+.minimal-theme {
+    /* Color Palette - Dark Mode Only */
+    --bg-primary: #000000;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A3A3A3;
+    /* neutral-400 */
+    --card-bg: #171717;
+    /* neutral-900 */
+    --folder-bg: #262626;
+    /* neutral-800 - distinct from card */
+    --bg-secondary: #262626;
+    /* neutral-800 */
+    --border-color: #333333;
+    /* neutral-800 */
+    --accent-color: #FFFFFF;
+    --accent-secondary: #262626;
+
+    /* Typography */
+    --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-ui: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* Global Reset */
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+}
+
+/* App Container */
+.minimal-theme .app-container {
+    background-color: var(--bg-primary);
+    max-width: 700px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+/* Header */
+.minimal-theme .app-header {
+    border-bottom: none !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.minimal-theme .app-logo {
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    font-size: 1.5rem;
+    /* text-xl in design approx */
+}
+
+/* Cards (Entry, etc.) */
+.minimal-theme .entry-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1.5rem;
+    /* rounded-3xl */
+    padding: 1.5rem;
+    box-shadow: none;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.minimal-theme .entry-card:hover {
+    transform: none;
+    border-color: #404040;
+    /* Slightly lighter on hover */
+}
+
+/* Typography Overrides */
+.minimal-theme h1,
+.minimal-theme h2,
+.minimal-theme h3,
+.minimal-theme h4,
+.minimal-theme h5,
+.minimal-theme h6 {
+    font-family: var(--font-ui);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.minimal-theme p {
+    color: #D4D4D4;
+    /* neutral-300 approx */
+    font-weight: 400;
+}
+
+/* Buttons */
+.minimal-theme button {
+    border-radius: 9999px;
+    /* rounded-full */
+    font-family: var(--font-ui);
+    font-weight: 600;
+    transition: all 0.2s ease;
+    letter-spacing: 0;
+    text-transform: none;
+    /* Reset uppercase if inherited */
+}
+
+/* Specific Fix for Primary Actions (New Entry, Save, Seal Capsule) */
+.minimal-theme button[type="submit"],
+.minimal-theme .btn-confirm,
+.minimal-theme .btn-primary,
+.minimal-theme button[style*="background: var(--text-color)"],
+.minimal-theme button[style*="backgroundColor: var(--text-color)"] {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    border: none !important;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* Fix for manual book entry save button which might use inline styles */
+.minimal-theme button svg+span,
+/* Assuming icon + text structure */
+.minimal-theme button {
+    /* Ensure generic buttons didn't inherit weird colors */
+}
+
+
+/* Primary Action Button (New Entry) */
+.minimal-theme .btn-new-entry {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: none;
+    font-weight: 700;
+    padding: 12px 24px;
+}
+
+.minimal-theme .btn-new-entry:hover {
+    background-color: #E5E5E5;
+    transform: scale(0.98);
+}
+
+/* BOOKSHELF TOOLBAR BUTTONS */
+.minimal-theme .btn-toolbar {
+    background-color: transparent !important;
+    border: 1px solid #404040 !important;
+    /* Lighter border for visibility */
+    color: #fff !important;
+}
+
+.minimal-theme .btn-toolbar:hover {
+    border-color: #fff !important;
+}
+
+.minimal-theme .btn-toolbar-primary {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #fff !important;
+}
+
+/* Inputs */
+.minimal-theme input,
+.minimal-theme textarea,
+.minimal-theme select,
+.minimal-theme .search-input {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 0.75rem;
+    font-family: var(--font-body);
+    padding: 12px 16px;
+}
+
+.minimal-theme input::placeholder,
+.minimal-theme textarea::placeholder {
+    color: #555;
+    font-family: var(--font-body);
+}
+
+.minimal-theme input:focus,
+.minimal-theme textarea:focus {
+    outline: none;
+    border-color: #666 !important;
+}
+
+/* Theme Dropdown */
+.minimal-theme .theme-dropdown-btn {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    border-radius: 9999px !important;
+    /* rounded-full */
+}
+
+.minimal-theme .theme-dropdown-btn:hover {
+    color: var(--text-primary) !important;
+    border-color: var(--text-secondary) !important;
+}
+
+.minimal-theme .dropdown-menu {
+    background-color: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: var(--text-primary);
+    border-radius: 1rem !important;
+}
+
+.minimal-theme .dropdown-menu button {
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+}
+
+.minimal-theme .dropdown-menu button:hover {
+    background-color: #262626;
+}
+
+/* Bookshelf Icon Specifics */
+.minimal-theme img[alt=""] {
+    /* Invert bookshelf icon to be white since background is black */
+    filter: invert(1) !important;
+}
+
+/* Scrollbar */
+.minimal-theme ::-webkit-scrollbar {
+    width: 6px;
+}
+
+background: #000;
+}
+
+.minimal-theme ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+}
+
+/* Modal Buttons Fix */
+.minimal-theme .btn-modal.cancel {
+    background-color: transparent;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 8px;
+}
+
+.minimal-theme .btn-modal.cancel:hover {
+    border-color: #fff;
+}
+
+.minimal-theme .btn-modal.delete {
+    background-color: #ff4b4b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+}
+
+/* Voice Recorder Dark Theme Overrides */
+.minimal-theme .modern-recorder {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+}
+
+.minimal-theme .modern-time-display {
+    font-family: var(--font-ui);
+    font-size: 3.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 40px;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+}
+
+.minimal-theme .modern-controls {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.minimal-theme .btn-modern-record {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    box-shadow: none;
+}
+
+.minimal-theme .btn-modern-record .record-dot {
+    width: 24px;
+    height: 24px;
+    background-color: #ff4b4b;
+    border-radius: 50%;
+}
+
+.minimal-theme .btn-modern-record:hover {
+    border-color: #fff;
+    background-color: #222;
+    transform: scale(1.05);
+}
+
+.minimal-theme .btn-modern-stop {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    background-color: #fff;
+    /* High contrast stop */
+    color: #000;
+}
+
+.minimal-theme .modern-instruction {
+    margin-top: 40px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: #888;
+}
+
+/* Audio Waves */
+.minimal-theme .audio-waves {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.minimal-theme .wave {
+    width: 6px;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 3px;
+    animation: wave 1.2s ease-in-out infinite;
+    opacity: 0.2;
+}
+
+.minimal-theme .wave:nth-child(1) {
+    animation-delay: 0.0s;
+    height: 40%;
+}
+
+.minimal-theme .wave:nth-child(2) {
+    animation-delay: 0.1s;
+    height: 70%;
+}
+
+.minimal-theme .wave:nth-child(3) {
+    animation-delay: 0.2s;
+    height: 100%;
+}
+
+.minimal-theme .wave:nth-child(4) {
+    animation-delay: 0.3s;
+    height: 70%;
+}
+
+.minimal-theme .wave:nth-child(5) {
+    animation-delay: 0.4s;
+    height: 40%;
+}
+
+.minimal-theme .btn-modern-pause {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.minimal-theme .btn-modern-pause .bar {
+    width: 6px;
+    height: 18px;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+.minimal-theme .btn-modern-pause .pause-bars {
+    display: flex;
+    gap: 6px;
+}
+
+.minimal-theme .audio-player-modern {
+    width: 300px;
+    height: 40px;
+    border-radius: 20px;
+    filter: invert(1);
+    /* Invert standard audio player for dark mode relevance */
+}
+
+/* Review Controls */
+.minimal-theme .modern-review-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+}
+
+.minimal-theme .modern-action-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.minimal-theme .btn-modern-discard {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: #888;
+}
+
+.minimal-theme .btn-modern-discard:hover {
+    color: #ff4b4b;
+    border-color: #ff4b4b;
+}
+
+.minimal-theme .btn-modern-save {
+    padding: 0 30px;
+    height: 50px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #fff;
+    color: #000;
+}

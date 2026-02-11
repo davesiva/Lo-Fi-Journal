@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import JournalEditor from './components/JournalEditor';
 import Dashboard from './components/Dashboard';
 import VoiceRecorder from './components/VoiceRecorder';
@@ -9,6 +9,9 @@ import Bookshelf from './components/Bookshelf';
 import BookDetail from './components/BookDetail';
 import bookshelfIcon from './assets/bookshelf-icon.png';
 import './styles/ModernTheme.css';
+import './styles/MinimalTheme.css';
+
+import { ChevronDown } from 'lucide-react';
 
 function App() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf', 'book-detail'
@@ -16,6 +19,8 @@ function App() {
   const [initialEditorContent, setInitialEditorContent] = useState('');
   const [selectedCapsule, setSelectedCapsule] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+  const themeMenuRef = useRef(null);
 
   const navigateToWrite = (date = null, content = '') => {
     setSelectedDate(date);
@@ -48,14 +53,44 @@ function App() {
     setView('time-capsule');
   }
 
-  const [theme, setTheme] = useState('modern'); // 'default' | 'modern'
+  // Initialize theme from localStorage or default to 'modern'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('ttyl-theme') || 'modern';
+  });
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'default' ? 'modern' : 'default');
+  // Persist theme changes
+  useEffect(() => {
+    localStorage.setItem('ttyl-theme', theme);
+  }, [theme]);
+
+  // Close theme menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (themeMenuRef.current && !themeMenuRef.current.contains(event.target)) {
+        setThemeMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const getThemeClass = () => {
+    if (theme === 'modern') return 'modern-theme';
+    // Minimal theme is Design 2 (Dark Mode Only)
+    if (theme === 'minimal') return 'minimal-theme';
+    return '';
   };
 
+  const getThemeLabel = () => {
+    if (theme === 'modern') return 'Modern';
+    if (theme === 'minimal') return 'Dark';
+    return 'Classic';
+  }
+
   return (
-    <div className={theme === 'modern' ? 'modern-theme' : ''} style={{ minHeight: '100vh' }}>
+    <div className={getThemeClass()} style={{ minHeight: '100vh' }}>
       <div className="app-container">
         <header className="app-header" style={{
           padding: '30px 0',
@@ -83,19 +118,71 @@ function App() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <button
-              onClick={toggleTheme}
-              style={{
-                background: 'none',
-                border: '1px solid var(--border-color)',
-                padding: '5px 10px',
-                fontSize: '0.8rem',
-                cursor: 'pointer',
-                fontFamily: 'var(--font-ui)',
-              }}
-            >
-              {theme === 'default' ? 'Classic' : 'Modern'}
-            </button>
+
+            {/* Theme Dropdown */}
+            <div style={{ position: 'relative' }} ref={themeMenuRef}>
+              <button
+                className="theme-dropdown-btn"
+                onClick={() => setThemeMenuOpen(!themeMenuOpen)}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--border-color)',
+                  padding: '5px 10px',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-ui)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  borderRadius: '6px'
+                }}
+              >
+                {getThemeLabel()} <ChevronDown size={14} />
+              </button>
+
+              {themeMenuOpen && (
+                <div className="dropdown-menu" style={{
+                  position: 'absolute',
+                  top: '120%',
+                  right: 0,
+                  zIndex: 100,
+                  minWidth: '140px',
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--bg-primary)',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                }}>
+                  <button
+                    onClick={() => { setTheme('default'); setThemeMenuOpen(false); }}
+                    style={{
+                      fontWeight: theme === 'default' ? 'bold' : 'normal',
+                      backgroundColor: theme === 'default' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
+                    }}
+                  >
+                    Classic
+                  </button>
+                  <button
+                    onClick={() => { setTheme('modern'); setThemeMenuOpen(false); }}
+                    style={{
+                      fontWeight: theme === 'modern' ? 'bold' : 'normal',
+                      backgroundColor: theme === 'modern' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
+                    }}
+                  >
+                    Modern
+                  </button>
+                  <button
+                    onClick={() => { setTheme('minimal'); setThemeMenuOpen(false); }}
+                    style={{
+                      fontWeight: theme === 'minimal' ? 'bold' : 'normal',
+                      backgroundColor: theme === 'minimal' ? 'rgba(127, 127, 127, 0.1)' : 'transparent'
+                    }}
+                  >
+                    Dark
+                  </button>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={navigateToBookshelf}
               style={{
@@ -104,7 +191,6 @@ function App() {
                 fontSize: '1.2rem',
                 cursor: 'pointer',
                 fontFamily: 'inherit',
-                // opacity: view === 'bookshelf' ? 1 : 0.6, // REMOVED to fix mix-blend-mode stacking context
                 textDecoration: view === 'bookshelf' ? 'underline' : 'none',
                 color: view === 'bookshelf' ? 'var(--text-color)' : 'var(--text-secondary)', // Text fade
                 display: 'flex',
@@ -120,7 +206,7 @@ function App() {
                   style={{
                     height: '24px',
                     width: 'auto',
-                    marginLeft: '-2px', // Pull closer to text
+                    marginLeft: '4px', // Add space
                     imageRendering: 'pixelated',
                     // Use brightness to fade the black to gray, avoid opacity logic issues
                     filter: view === 'bookshelf' ? 'none' : 'contrast(1.2) brightness(1.5) grayscale(100%)',

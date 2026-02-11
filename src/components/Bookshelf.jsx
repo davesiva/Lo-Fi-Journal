@@ -5,6 +5,7 @@ import ManualBookEntry from './ManualBookEntry';
 import BookScanner from './BookScanner';
 import ConfirmModal from './ConfirmModal';
 import { suggestBookCategory } from '../services/ai';
+import ReadingAnalytics from './ReadingAnalytics';
 import './Dashboard.css';
 
 export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
@@ -219,6 +220,7 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                             {/* SORT & ADD Controls */}
                             <div style={{ display: 'flex', gap: '6px' }}>
                                 <button
+                                    className="btn-toolbar"
                                     onClick={handleAISort}
                                     disabled={isAISorting}
                                     style={{
@@ -240,6 +242,7 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
 
                                 <div style={{ position: 'relative' }}>
                                     <button
+                                        className="btn-toolbar"
                                         onClick={(e) => { e.stopPropagation(); setShowSortMenu(!showSortMenu); setShowAddMenu(false); }}
                                         style={{
                                             background: 'none',
@@ -276,6 +279,7 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                 </div>
 
                                 <button
+                                    className="btn-toolbar-primary"
                                     onClick={(e) => { e.stopPropagation(); setShowAddMenu(!showAddMenu); }}
                                     style={{
                                         background: 'var(--text-primary)',
@@ -315,6 +319,11 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                 </div>
             </div>
 
+            {/* --- READING ANALYTICS (New) --- */}
+            {!currentFolder && !selectionMode && (
+                <ReadingAnalytics books={books} onNavigateBook={onNavigateBook} />
+            )}
+
             {/* --- FOLDER SHELF (Only visible in 'All Books' view) --- */}
             {!currentFolder && folders.length > 0 && !selectionMode && (
                 <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '10px', marginBottom: '20px' }}>
@@ -325,7 +334,7 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                             style={{
                                 minWidth: '120px',
                                 padding: '15px',
-                                background: '#f5f5f5',
+                                background: 'var(--folder-bg, #f5f5f5)',
                                 borderRadius: '12px',
                                 cursor: 'pointer',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px'
@@ -357,8 +366,11 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                 style={{
                                     cursor: 'pointer',
                                     border: isSelected ? '2px solid var(--accent-color, #000)' : '1px solid var(--border-color)',
-                                    background: isSelected ? 'rgba(0,0,0,0.05)' : '#fff',
-                                    position: 'relative'
+                                    background: isSelected ? 'rgba(0,0,0,0.05)' : 'var(--card-bg, #fff)',
+                                    position: 'relative',
+                                    display: 'flex', // Flex layout for cover + content
+                                    gap: '15px',
+                                    alignItems: 'center'
                                 }}
                                 onClick={() => selectionMode ? toggleSelection(book.id) : onNavigateBook(book.id)}
                                 onContextMenu={(e) => { e.preventDefault(); handleLongPress(book.id); }} // Desktop right click
@@ -369,9 +381,23 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                     e.target.addEventListener('touchmove', () => clearTimeout(timer), { once: true });
                                 }}
                             >
-                                <div className="entry-content">
+                                {/* Cover Image (Thumbnail) */}
+                                <div style={{
+                                    width: '50px', height: '75px',
+                                    borderRadius: '6px',
+                                    background: '#eee',
+                                    backgroundImage: book.coverUrl ? `url(${book.coverUrl})` : 'none',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    flexShrink: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    {!book.coverUrl && <BookOpen size={16} color="#ccc" />}
+                                </div>
+
+                                <div className="entry-content" style={{ flex: 1 }}>
                                     <div className="entry-header-row">
-                                        <span style={{ fontFamily: 'var(--font-ui)', fontSize: '1.4rem', fontWeight: 500 }}>
+                                        <span style={{ fontFamily: 'var(--font-ui)', fontSize: '1.2rem', fontWeight: 500, lineHeight: 1.3 }}>
                                             {book.title}
                                         </span>
                                         {/* Selection Checkbox (Visual only) */}
@@ -387,18 +413,24 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                             </div>
                                         )}
                                     </div>
-                                    <div style={{ fontSize: '1rem', opacity: 0.8, marginTop: '4px', fontStyle: 'italic', fontFamily: 'var(--font-body)' }}>
+                                    <div style={{ fontSize: '0.9rem', opacity: 0.8, marginTop: '2px', fontStyle: 'italic', fontFamily: 'var(--font-body)' }}>
                                         by {book.author}
                                     </div>
-                                    <div className="entry-date" style={{ marginTop: '8px' }}>
-                                        {book.category && <span style={{ marginRight: '10px', fontSize: '0.8rem', background: '#eee', padding: '2px 6px', borderRadius: '4px' }}>{book.category}</span>}
-                                        {book.finishedDate ? `Read ${new Date(book.finishedDate).toLocaleDateString()}` : `Started ${new Date(book.startedDate).toLocaleDateString()}`}
+                                    <div className="entry-date" style={{ marginTop: '6px', fontSize: '0.8rem' }}>
+                                        {book.category && <span style={{ marginRight: '10px', background: 'var(--bg-secondary, #eee)', padding: '2px 6px', borderRadius: '4px' }}>{book.category}</span>}
+                                        {book.finishedDate ?
+                                            `Read ${new Date(book.finishedDate).toLocaleDateString()}` :
+                                            (book.totalPages && book.currentPage ?
+                                                `${Math.round((book.currentPage / book.totalPages) * 100)}% Complete` :
+                                                `Started ${new Date(book.startedDate).toLocaleDateString()}`
+                                            )
+                                        }
                                     </div>
                                 </div>
 
                                 {/* Standard Menu (only if not selecting) */}
                                 {!selectionMode && (
-                                    <div className="menu-container">
+                                    <div className="menu-container" style={{ alignSelf: 'flex-start', marginTop: '5px' }}>
                                         <button className="btn-menu-trigger" onClick={(e) => handleDeleteClick(e, book)}>
                                             <Trash2 size={16} />
                                         </button>
@@ -447,14 +479,14 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
             {/* --- NEW FOLDER MODAL or MOVE TO FOLDER MODAL --- */}
             {showFolderModal && (
                 <div className="modal-overlay">
-                    <div className="modal-content" style={{ minWidth: '300px' }}>
+                    <div className="modal-content" style={{ minWidth: '300px', background: 'var(--card-bg, #fff)', color: 'var(--text-primary, #000)' }}>
                         {selectionMode ? (
                             <>
                                 <h3>Move to Folder</h3>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '300px', overflowY: 'auto' }}>
                                     <button
                                         onClick={() => handleMoveSelected(null)} // Uncategorized
-                                        style={{ padding: '15px', background: '#f5f5f5', border: 'none', textAlign: 'left', borderRadius: '8px' }}
+                                        style={{ padding: '15px', background: 'var(--folder-bg, #f5f5f5)', border: 'none', textAlign: 'left', borderRadius: '8px', color: 'var(--text-primary)' }}
                                     >
                                         Remove from Folder
                                     </button>
@@ -462,7 +494,7 @@ export default function Bookshelf({ onNavigateHome, onNavigateBook }) {
                                         <button
                                             key={f.id}
                                             onClick={() => { handleMoveSelected(f.id); setShowFolderModal(false); }}
-                                            style={{ padding: '15px', background: '#f5f5f5', border: 'none', textAlign: 'left', borderRadius: '8px' }}
+                                            style={{ padding: '15px', background: 'var(--folder-bg, #f5f5f5)', border: 'none', textAlign: 'left', borderRadius: '8px', color: 'var(--text-primary)' }}
                                         >
                                             {f.name}
                                         </button>

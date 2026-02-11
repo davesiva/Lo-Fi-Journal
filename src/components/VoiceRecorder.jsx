@@ -126,13 +126,13 @@ export default function VoiceRecorder({ onBack, theme }) {
     };
 
     return (
-        <div className={`voice-container ${theme === 'modern' ? 'modern-voice' : ''}`}>
+        <div className={`voice-container ${theme === 'modern' || theme === 'minimal' ? 'modern-voice' : ''}`}>
             <button className="btn-back-voice" onClick={onBack}>
                 <ArrowLeft size={18} /> Back
             </button>
 
-            {theme === 'modern' ? (
-                // Modern UI
+            {theme === 'modern' || theme === 'minimal' ? (
+                // Modern UI (Shared structure for Modern & Dark)
                 <div className="modern-recorder">
                     <div className="modern-time-display">{formatTime(recordingTime)}</div>
 

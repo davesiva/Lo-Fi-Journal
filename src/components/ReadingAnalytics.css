@@ -1,0 +1,414 @@
+/* Reading Analytics Styles */
+
+/* --- LAYOUT --- */
+.analytics-container {
+    margin-bottom: 30px;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* --- CARDS BASE --- */
+.analytics-card {
+    border-radius: 24px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* GOAL CARD */
+.goal-card {
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border-color, #eee);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    color: var(--text-primary, #000);
+}
+
+.goal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.goal-title {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-secondary, #666);
+    font-weight: 500;
+}
+
+.goal-percentage {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 5px 0;
+    font-family: var(--font-ui);
+    /* Enforce UI font for numbers */
+}
+
+.goal-status {
+    font-size: 0.8rem;
+    color: #00af54;
+    font-weight: 600;
+}
+
+.goal-tag {
+    font-size: 0.75rem;
+    background: var(--bg-secondary, #f0f0f0);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-family: var(--font-body);
+}
+
+.goal-footer {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #888);
+    font-family: var(--font-body);
+}
+
+.goal-decoration {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 8px solid var(--bg-secondary, #f8f8f8);
+    border-top-color: var(--accent-color, #000);
+    transform: rotate(-45deg);
+    opacity: 0.1;
+}
+
+/* STREAK CARD */
+.streak-card {
+    background: #FFD700;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.streak-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.streak-title {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6A5A00;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.streak-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #000;
+    line-height: 1;
+    font-family: var(--font-ui);
+    /* Enforce UI font */
+}
+
+.streak-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6A5A00;
+    font-family: var(--font-body);
+}
+
+.streak-wave {
+    width: 100%;
+    height: 20px;
+    margin-top: 5px;
+    opacity: 0.3;
+}
+
+/* CURRENT SESSION CARD */
+.session-card {
+    background: var(--card-bg, #1a1a1a);
+    border-radius: 24px;
+    padding: 20px;
+    color: var(--text-primary, #fff);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, transparent);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.session-label {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.session-time-left {
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.session-content {
+    display: flex;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.session-book-cover {
+    width: 70px;
+    height: 100px;
+    border-radius: 8px;
+    background-color: #333;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.session-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.session-book-title {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+    font-family: var(--font-ui);
+    font-weight: 500;
+}
+
+.session-book-author {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-family: var(--font-body);
+}
+
+.session-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin-bottom: 8px;
+}
+
+.session-progress-fill {
+    height: 100%;
+    background: #FFD700;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.session-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    opacity: 0.6;
+    font-family: var(--font-body);
+}
+
+.session-empty {
+    text-align: center;
+    padding: 20px;
+    opacity: 0.5;
+}
+
+.session-blur-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 60%;
+    background-size: cover;
+    filter: blur(30px);
+    opacity: 0.1;
+    mask-image: linear-gradient(to left, black, transparent);
+    pointer-events: none;
+}
+
+/* --- THEME OVERRIDES --- */
+
+/* MODERN THEME */
+.modern-theme .analytics-card {
+    border: none;
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+}
+
+.modern-theme .goal-card {
+    background: white;
+}
+
+/* Modern Typography Fixes */
+.modern-theme .goal-title,
+.modern-theme .streak-title,
+.modern-theme .session-label {
+    font-family: var(--font-ui);
+    /* Playfair Display */
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.modern-theme .goal-percentage,
+.modern-theme .streak-number {
+    font-family: var(--font-ui);
+    font-weight: 700;
+}
+
+.modern-theme .streak-card {
+    background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+    box-shadow: 0 10px 20px -5px rgba(253, 185, 49, 0.4);
+}
+
+.modern-theme .session-card {
+    background: white;
+    color: #1a1a1a;
+    border: 1px solid var(--border-color);
+}
+
+.modern-theme .session-label,
+.modern-theme .session-time-left,
+.modern-theme .session-stats {
+    color: var(--text-secondary);
+    opacity: 1;
+}
+
+.modern-theme .session-progress-bar {
+    background: #f0f0f0;
+}
+
+.modern-theme .session-progress-fill {
+    background: var(--accent-color, #1a1a1a);
+}
+
+.modern-theme .session-blur-bg {
+    opacity: 0.05;
+}
+
+
+/* MINIMAL THEME */
+.minimal-theme .analytics-card {
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+}
+
+.minimal-theme .goal-card {
+    border: 1px solid #333;
+    /* Dark Grid Border */
+    border-radius: 12px;
+    background: #111;
+    /* Dark Background */
+    padding: 20px;
+    color: #fff;
+}
+
+.minimal-theme .goal-decoration {
+    display: none;
+}
+
+.minimal-theme .goal-title {
+    color: #888;
+}
+
+.minimal-theme .goal-tag {
+    background: #222;
+    color: #ccc;
+    border: 1px solid #333;
+}
+
+.minimal-theme .goal-percentage {
+    color: #fff;
+    font-weight: 700;
+}
+
+.minimal-theme .streak-card {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 20px;
+    color: #fff;
+}
+
+.minimal-theme .streak-title,
+.minimal-theme .streak-label {
+    color: #fff;
+    font-weight: 500;
+}
+
+.minimal-theme .streak-number {
+    color: #fff;
+}
+
+.minimal-theme .streak-card svg path {
+    stroke: #fff;
+}
+
+.minimal-theme .session-card {
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: none;
+}
+
+.minimal-theme .session-label,
+.minimal-theme .session-time-left {
+    color: #888;
+    letter-spacing: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.minimal-theme .session-book-cover {
+    border-radius: 0;
+    border: 1px solid #333;
+    box-shadow: none;
+}
+
+.minimal-theme .session-book-author {
+    color: #888;
+}
+
+.minimal-theme .session-progress-bar {
+    background: #222;
+    border-radius: 0;
+}
+
+.minimal-theme .session-progress-fill {
+    background: #fff;
+    border-radius: 0;
+}
+
+.minimal-theme .session-stats {
+    color: #888;
+    font-family: var(--font-ui);
+    font-weight: 500;
+}
+
+.minimal-theme .session-blur-bg {
+    display: none;
+}
