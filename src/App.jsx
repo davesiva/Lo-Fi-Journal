@@ -12,8 +12,6 @@ import './styles/ModernTheme.css';
 import './styles/ModernTheme.css';
 import './styles/DarkTheme.css';
 
-import { ChevronDown, Moon, Sun } from 'lucide-react';
-
 function App() {
   const [view, setView] = useState('dashboard'); // 'dashboard', 'write', 'voice', 'time-capsule', 'bookshelf', 'book-detail'
   const [selectedDate, setSelectedDate] = useState(null);
@@ -123,16 +121,16 @@ function App() {
 
             {/* Theme Toggle Switch */}
             <div
-              className="theme-toggle-wrapper"
+              className={`theme-toggle-wrapper ${theme}`}
               onClick={() => setTheme(theme === 'modern' ? 'minimal' : 'modern')}
               title={theme === 'modern' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
             >
               <div className="theme-toggle-switch"></div>
-              <div className="theme-toggle-icon sun">
-                <Sun size={16} />
-              </div>
-              <div className="theme-toggle-icon moon">
-                <Moon size={16} />
+              <div className="stars">
+                <span className="star star-1"></span>
+                <span className="star star-2"></span>
+                <span className="star star-3"></span>
+                <span className="star star-4"></span>
               </div>
             </div>
 
