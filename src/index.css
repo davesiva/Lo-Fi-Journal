@@ -94,14 +94,7 @@ button {
   /* Warm paper inner */
 }
 
-/* Hovering in Light / Modern State (Previews Dark Moon) */
-.theme-toggle-wrapper.modern:hover {
-  background-color: #171717;
-}
 
-.theme-toggle-wrapper.modern:hover .theme-toggle-switch {
-  box-shadow: inset -6px -3px 0 0px #fff;
-}
 
 /* Dark / Minimal State (Moon - White crescent) */
 .theme-toggle-wrapper.minimal .theme-toggle-switch {
@@ -109,14 +102,7 @@ button {
   transform: translateX(32px);
 }
 
-/* Inverse Hover (in Minimal, preview Light Sun) */
-.theme-toggle-wrapper.minimal:hover {
-  background-color: #333;
-}
 
-.theme-toggle-wrapper.minimal:hover .theme-toggle-switch {
-  box-shadow: inset 0 0 0 12px var(--bg-primary, #FAF7F2);
-}
 
 /* Stars - Reduced for minimalist feel */
 .theme-toggle-wrapper .stars {
@@ -130,13 +116,8 @@ button {
   pointer-events: none;
 }
 
-.theme-toggle-wrapper.minimal .stars,
-.theme-toggle-wrapper.modern:hover .stars {
+.theme-toggle-wrapper.minimal .stars {
   opacity: 1;
-}
-
-.theme-toggle-wrapper.minimal:hover .stars {
-  opacity: 0;
 }
 
 .star {
